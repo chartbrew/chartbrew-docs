@@ -3,31 +3,46 @@ title: 'Introduction'
 description: 'Example section for showcasing API endpoints'
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
-
-## Welcome
-
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+You can use Chartbrew's API to create, read, update, and delete charts, dashboards, and more. 
+To authenticate your requests, you'll need to create an API key in Chartbrew.
 
 <Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
+  title="Create an API key"
+  icon="code"
+  href="https://chartbrew.com/blog/how-to-create-api-keys-in-chartbrew/"
 >
-  View the OpenAPI specification file
+  Learn how to create an API key in Chartbrew
+</Card>
+
+<Card
+  title="Stay up to date"
+  icon="bell"
+  href="https://app.notocat.com/sub/frm_m-JUS_kzyb929tLSegFUF"
+>
+  Subscribe to our newsletter to stay up to date with the latest changes in the API. 
+  We will only email you important updates such as deprecations, breaking changes, and new features.
 </Card>
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+All API endpoints are authenticated using Bearer tokens added to the header of your request.
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+Example request:
+
+```bash
+curl -X GET "https://api.chartbrew.com/project/65342" \
+-H "Authorization: Bearer YOUR_API_KEY"
 ```
+
+## Main endpoint
+
+If you're using our managed service, the main endpoint is `https://api.chartbrew.com`.
+
+If you're self-hosting Chartbrew, update the endpoint to your own.
+
+This documentation site will use the managed service endpoint for the examples.
+
+## Documentation notices
+
+The is a `What is a...` section for each endpoint. This is where you can learn how 
+each resource works and how to use them.

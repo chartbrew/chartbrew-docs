@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
+    "title": "Chartbrew API reference", 
+    "description": "The OpenAPI specification for Chartbrew",
     "license": {
       "name": "MIT"
     },
@@ -10,7 +10,7 @@
   },
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
+      "url": "https://api.chartbrew.com"
     }
   ],
   "security": [
@@ -19,105 +19,1342 @@
     }
   ],
   "paths": {
-    "/plants": {
+    "/team/{team_id}/connections": {
       "get": {
-        "description": "Returns all plants from the system that the user has access to",
+        "description": "Get all connections for a team",
         "parameters": [
           {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
+            "name": "team_id",
+            "in": "path",
+            "description": "ID of the team",
+            "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Plant response",
+            "description": "Array of connections",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Plant"
+                    "$ref": "#/components/schemas/ConnectionResponse"
                   }
                 }
               }
             }
           },
           "400": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
+            "description": "Error response"
+          },
+          "403": {
+            "description": "Access denied"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "post": {
-        "description": "Creates a new plant in the store",
+        "description": "Create a new connection",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "description": "ID of the team",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
-          "description": "Plant to add to the store",
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewPlant"
+                "$ref": "#/components/schemas/NewConnection"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
-            "description": "plant response",
+            "description": "Created connection",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Plant"
+                  "$ref": "#/components/schemas/Connection"
                 }
               }
             }
           },
           "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
+            "description": "Error response"
+          },
+          "401": {
+            "description": "Not authorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
+    "/team/{team_id}/connections/{connection_id}": {
+      "get": {
+        "description": "Get a connection by ID",
         "parameters": [
           {
-            "name": "id",
+            "name": "team_id",
             "in": "path",
-            "description": "ID of plant to delete",
+            "description": "ID of the team",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
+            }
+          },
+          {
+            "name": "connection_id",
+            "in": "path",
+            "description": "ID of the connection",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
         ],
         "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
+          "200": {
+            "description": "Connection details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Connection"
+                }
+              }
+            }
           },
           "400": {
-            "description": "unexpected error",
+            "description": "Error response"
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "description": "Update a connection",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "description": "ID of the team",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "connection_id",
+            "in": "path",
+            "description": "ID of the connection",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectionUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated connection",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Connection"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response"
+          },
+          "401": {
+            "description": "Not authorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "description": "Delete a connection",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "description": "ID of the team",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "connection_id",
+            "in": "path",
+            "description": "ID of the connection",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "removeDatasets",
+            "in": "query",
+            "description": "Whether to remove associated datasets",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Connection deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "removed": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response"
+          },
+          "401": {
+            "description": "Not authorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/team/{team_id}/connections/{connection_id}/files": {
+      "post": {
+        "description": "Add files to a connection (like SSL certificates)",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "description": "ID of the team",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "connection_id",
+            "in": "path",
+            "description": "ID of the connection",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "sslCa": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "SSL CA certificate file"
+                  },
+                  "sslCert": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "SSL certificate file"
+                  },
+                  "sslKey": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "SSL key file"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated connection",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Connection"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "No files were uploaded"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/team/{team_id}/connections/{connection_id}/test": {
+      "get": {
+        "description": "Test a connection",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "description": "ID of the team",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "connection_id",
+            "in": "path",
+            "description": "ID of the connection",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Test successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response"
+          },
+          "401": {
+            "description": "Not authorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/team/{team_id}/datasets": {
+      "get": {
+        "description": "Get all datasets for a team",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "description": "ID of the team",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of datasets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Dataset"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response"
+          },
+          "403": {
+            "description": "Access denied"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "description": "Create a new dataset",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "description": "ID of the team",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewDataset"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created dataset",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dataset"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response"
+          },
+          "401": {
+            "description": "Not authorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/team/{team_id}/datasets/{dataset_id}": {
+      "get": {
+        "description": "Get a dataset by ID",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "description": "ID of the team",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "description": "ID of the dataset",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dataset object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dataset"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response"
+          },
+          "401": {
+            "description": "Not authorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "description": "Update a dataset",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "description": "ID of the team",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "description": "ID of the dataset",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DatasetUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated dataset",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dataset"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response"
+          },
+          "401": {
+            "description": "Not authorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "description": "Delete a dataset",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "description": "ID of the team",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "description": "ID of the dataset",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dataset deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/team/{team_id}/datasets/{dataset_id}/request": {
+      "get": {
+        "description": "Run the request attached to the dataset",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "description": "ID of the team",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "description": "ID of the dataset",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "noSource",
+            "in": "query",
+            "description": "Skip running the data source",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "getCache",
+            "in": "query",
+            "description": "Get cached data if available",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "filters",
+            "in": "query",
+            "description": "Filter parameters for the request",
+            "schema": {
+              "$ref": "#/components/schemas/DatasetFilters"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dataset with request results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "options": {
+                      "$ref": "#/components/schemas/Dataset"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response"
+          },
+          "404": {
+            "description": "Dataset not found"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/team/{team_id}/datasets/{dataset_id}/dataRequests": {
+      "post": {
+        "summary": "Create a new data request",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Data request created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataRequest"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "get": {
+        "summary": "Get data requests by dataset ID",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of data requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DataRequest"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/team/{team_id}/datasets/{dataset_id}/dataRequests/{id}": {
+      "put": {
+        "summary": "Update a data request",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated data request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataRequest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response"
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "403": {
+            "description": "Access denied"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete a data request",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Data request deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "deleted": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response"
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "403": {
+            "description": "Access denied"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/team/{team_id}/datasets/{dataset_id}/dataRequests/{id}/request": {
+      "post": {
+        "summary": "Run a single data request",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "noSource": {
+                    "type": "boolean"
+                  },
+                  "getCache": {
+                    "type": "boolean"
+                  },
+                  "filters": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Data request results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataRequestResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/project": {
+      "post": {
+        "description": "Create a new dashboard",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewDashboard"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created dashboard",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dashboard"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "403": {
+            "description": "Access denied"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/project/{id}": {
+      "get": {
+        "description": "Get a specific dashboard by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the dashboard",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dashboard response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dashboard"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response"
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "description": "Update a dashboard",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the dashboard",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DashboardUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated dashboard",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dashboard"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response"
+          },
+          "401": {
+            "description": "Not authorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "description": "Delete a dashboard",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the dashboard",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dashboard deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "removed": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "403": {
+            "description": "Access denied"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/project/team/{team_id}": {
+      "get": {
+        "description": "Get all dashboards for a team",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "description": "ID of the team",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of dashboards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DashboardItem"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response"
+          },
+          "401": {
+            "description": "Not authorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/project/dashboard/{brewName}": {
+      "get": {
+        "description": "Get a public dashboard by its brew name",
+        "parameters": [
+          {
+            "name": "brewName",
+            "in": "path",
+            "description": "Brew name of the dashboard",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pass",
+            "in": "query",
+            "description": "Password for protected dashboards",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Public dashboard response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dashboard"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response"
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "403": {
+            "description": "Password required or incorrect"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/project/{project_id}/chart": {
+      "get": {
+        "description": "Returns all charts for a specific project",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "description": "ID of the project",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of charts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Chart"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied",
             "content": {
               "application/json": {
                 "schema": {
@@ -126,60 +1363,1989 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "description": "Creates a new chart in the project",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "description": "ID of the project",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Chart data",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewChart"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created chart",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Chart"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/project/{project_id}/chart/{id}": {
+      "get": {
+        "description": "Returns a specific chart by ID",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "description": "ID of the project",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the chart",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Chart response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Chart"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "description": "Updates an existing chart",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "description": "ID of the project",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the chart",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "justUpdates",
+            "in": "query",
+            "description": "Only return updated fields",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Chart update data",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChartUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated chart",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Chart"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "description": "Delete a specific chart",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "description": "ID of the project",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the chart",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Chart deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "deleted": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/project/{project_id}/chart/{id}/query": {
+      "post": {
+        "description": "Run the query for a chart",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "description": "ID of the project",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the chart",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "no_source",
+            "in": "query",
+            "description": "Skip source data in response",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "skip_parsing",
+            "in": "query",
+            "description": "Skip data parsing",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "getCache",
+            "in": "query",
+            "description": "Get cached data if available",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Query filters",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "filters": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Chart data response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Chart"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Payload too large",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/project/{project_id}/chart/{id}/chart-dataset-config": {
+      "post": {
+        "description": "Create a new chart dataset configuration",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "description": "ID of the project",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the chart",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChartDatasetConfig"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created chart dataset configuration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChartDatasetConfig"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/project/{project_id}/chart/{id}/chart-dataset-config/{cdc_id}": {
+      "put": {
+        "description": "Update a chart dataset configuration",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "description": "ID of the project",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the chart",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cdcId",
+            "in": "path",
+            "description": "ID of the chart dataset configuration",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChartDatasetConfig"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated chart dataset configuration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChartDatasetConfig"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "description": "Delete a chart dataset configuration",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "description": "ID of the project",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the chart",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cdcId",
+            "in": "path",
+            "description": "ID of the chart dataset configuration",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted chart dataset configuration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "removed": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     }
   },
   "components": {
     "schemas": {
-      "Plant": {
+      "ConnectionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "team_id": {
+            "type": "integer"
+          },
+          "project_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "oauth_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "mongodb",
+              "api",
+              "mysql",
+              "postgres",
+              "realtimedb",
+              "firestore",
+              "googleAnalytics",
+              "customerio"
+            ]
+          },
+          "subType": {
+            "type": "string",
+            "enum": [
+              "timescaledb",
+              "supabasedb",
+              "rdsPostgres",
+              "rdsMysql"
+            ]
+          },
+          "active": {
+            "type": "boolean",
+            "default": true
+          },
+          "ssl": {
+            "type": "boolean",
+            "default": false
+          },
+          "sslMode": {
+            "type": "string",
+            "default": "require"
+          }
+        }
+      },
+      "Connection": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "team_id": {
+            "type": "integer"
+          },
+          "project_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "oauth_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "mongodb",
+              "api",
+              "mysql",
+              "postgres",
+              "realtimedb",
+              "firestore",
+              "googleAnalytics",
+              "customerio"
+            ]
+          },
+          "subType": {
+            "type": "string",
+            "description": "Used for connections based on main types",
+            "enum": [
+              "timescaledb",
+              "supabasedb",
+              "rdsPostgres",
+              "rdsMysql",
+              "api",
+              "mongodb",
+              "api",
+              "mysql",
+              "postgres",
+              "realtimedb", 
+              "firestore",
+              "googleAnalytics",
+              "customerio"
+            ]
+          },
+          "active": {
+            "type": "boolean",
+            "default": true
+          },
+          "host": {
+            "type": "string"
+          },
+          "dbName": {
+            "type": "string"
+          },
+          "port": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "srv": {
+            "type": "boolean",
+            "default": false
+          },
+          "options": {
+            "type": "object"
+          },
+          "connectionString": {
+            "type": "string",
+            "description": "Used for MongoDB, Postgres, and MySQL connections"
+          },
+          "authentication": {
+            "type": "object",
+            "description": "Used for API connections",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "bearer_token",
+                  "basic_auth"
+                ]
+              },
+              "token": {
+                "type": "string"
+              },
+              "user": {
+                "type": "string"
+              },
+              "pass": {
+                "type": "string"
+              }
+            }
+          },
+          "firebaseServiceAccount": {
+            "type": "object",
+            "description": "JSON object containing the Firebase service account credentials"
+          },
+          "ssl": {
+            "type": "boolean",
+            "default": false
+          },
+          "sslMode": {
+            "type": "string",
+            "default": "require"
+          },
+          "sslCa": {
+            "type": "string"
+          },
+          "sslCert": {
+            "type": "string"
+          },
+          "sslKey": {
+            "type": "string"
+          },
+          "schema": {
+            "type": "object"
+          }
+        }
+      },
+      "NewConnection": {
+        "type": "object",
         "required": [
-          "name"
+          "name",
+          "type",
+          "team_id"
         ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "mongodb", 
+              "api",
+              "mysql",
+              "postgres",
+              "realtimedb",
+              "firestore",
+              "googleAnalytics",
+              "customerio"
+            ]
+          },
+          "subType": {
+            "type": "string",
+            "description": "Used for connections based on main types",
+            "enum": [
+              "timescaledb",
+              "supabasedb",
+              "rdsPostgres",
+              "rdsMysql",
+              "api",
+              "mongodb",
+              "api",
+              "mysql",
+              "postgres",
+              "realtimedb",
+              "firestore",
+              "googleAnalytics",
+              "customerio"
+            ]
+          },
+          "team_id": {
+            "type": "integer"
+          },
+          "host": {
+            "type": "string"
+          },
+          "port": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "options": {
+            "type": "object",
+            "description": "Used for MongoDB, Postgres, and MySQL connections"
+          },
+          "authentication": {
+            "type": "object",
+            "description": "Used for API connections",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "bearer_token",
+                  "basic_auth"
+                ]
+              },
+              "token": {
+                "type": "string"
+              },
+              "user": {
+                "type": "string"
+              },
+              "pass": {
+                "type": "string"
+              }
+            }
+          },
+          "firebaseServiceAccount": {
+            "type": "object",
+            "description": "JSON object containing the Firebase service account credentials"
+          },
+          "ssl": {
+            "type": "boolean",
+            "default": false
+          },
+          "sslMode": {
+            "type": "string",
+            "default": "require"
+          },
+          "schema": {
+            "type": "object",
+            "description": "Used for Postgres and MySQL. This gets populated automatically whenever the connection is used in a chart."
+          }
+        }
+      },
+      "ConnectionUpdate": {
         "type": "object",
         "properties": {
           "name": {
-            "description": "The name of the plant",
             "type": "string"
           },
-          "tag": {
-            "description": "Tag to specify the type",
+          "host": {
+            "type": "string"
+          },
+          "port": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "options": {
+            "type": "object",
+            "description": "Used for MongoDB, Postgres, and MySQL connections"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "mongodb",
+              "api",
+              "mysql",
+              "postgres"
+            ]
+          },
+          "subType": {
+            "type": "string",
+            "description": "Used for connections based on main types",
+            "enum": [
+              "timescaledb",
+              "supabasedb",
+              "rdsPostgres",
+              "rdsMysql",
+              "api",
+              "mongodb",
+              "api",
+              "mysql",
+              "postgres",
+              "realtimedb",
+              "firestore",
+              "googleAnalytics",
+              "customerio"
+            ]
+          },
+          "authentication": {
+            "type": "object",
+            "description": "Used for API connections",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "bearer_token",
+                  "basic_auth"
+                ]
+              },
+              "token": {
+                "type": "string"
+              },
+              "user": {
+                "type": "string"
+              },
+              "pass": {
+                "type": "string"
+              }
+            }
+          },
+          "firebaseServiceAccount": {
+            "type": "object",
+            "description": "JSON object containing the Firebase service account credentials"
+          },
+          "ssl": {
+            "type": "boolean",
+            "default": false
+          },
+          "sslMode": {
+            "type": "string",
+            "default": "require"
+          },
+          "schema": {
+            "type": "object",
+            "description": "Used for Postgres and MySQL. This gets populated automatically whenever the connection is used in a chart."
+          },
+          "project_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Dataset": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "team_id": {
+            "type": "integer"
+          },
+          "project_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "chart_id": {
+            "type": "integer"
+          },
+          "connection_id": {
+            "type": "integer"
+          },
+          "draft": {
+            "type": "boolean",
+            "default": true
+          },
+          "query": {
+            "type": "string"
+          },
+          "xAxis": {
+            "type": "string"
+          },
+          "xAxisOperation": {
+            "type": "string"
+          },
+          "yAxis": {
+            "type": "string"
+          },
+          "yAxisOperation": {
+            "type": "string",
+            "default": "none"
+          },
+          "dateField": {
+            "type": "string"
+          },
+          "dateFormat": {
+            "type": "string"
+          },
+          "legend": {
+            "type": "string"
+          },
+          "fieldsSchema": {
+            "type": "object"
+          },
+          "excludedFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "configuration": {
+            "type": "object"
+          },
+          "joinSettings": {
+            "type": "object",
+            "properties": {
+              "joins": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "dr_id": {
+                      "type": "integer",
+                      "description": "DataRequest ID"
+                    },
+                    "join_id": {
+                      "type": "integer"
+                    },
+                    "dr_field": {
+                      "type": "string"
+                    },
+                    "join_field": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "NewDataset": {
+        "type": "object",
+        "required": [
+          "team_id"
+        ],
+        "properties": {
+          "team_id": {
+            "type": "integer"
+          },
+          "project_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "name": {
+            "type": "string"
+          },
+          "connection_id": {
+            "type": "integer"
+          },
+          "type": {
+            "type": "string"
+          },
+          "query": {
+            "type": "string"
+          },
+          "datasetColor": {
+            "type": "string"
+          },
+          "dateField": {
+            "type": "string"
+          },
+          "dateFormat": {
+            "type": "string"
+          },
+          "legend": {
+            "type": "string"
+          },
+          "configuration": {
+            "type": "object"
+          }
+        }
+      },
+      "DatasetUpdate": {
+        "type": "object",
+        "properties": {
+          "project_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "name": {
+            "type": "string"
+          },
+          "connection_id": {
+            "type": "integer"
+          },
+          "type": {
+            "type": "string"
+          },
+          "query": {
+            "type": "string"
+          },
+          "datasetColor": {
+            "type": "string"
+          },
+          "dateField": {
+            "type": "string"
+          },
+          "dateFormat": {
+            "type": "string"
+          },
+          "legend": {
+            "type": "string"
+          },
+          "configuration": {
+            "type": "object"
+          },
+          "joinSettings": {
+            "type": "object",
+            "properties": {
+              "joins": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "dr_id": {
+                      "type": "integer",
+                      "description": "DataRequest ID"
+                    },
+                    "join_id": {
+                      "type": "integer"
+                    },
+                    "dr_field": {
+                      "type": "string"
+                    },
+                    "join_field": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "DatasetFilters": {
+        "type": "object",
+        "properties": {
+          "conditions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "field": {
+                  "type": "string",
+                  "description": "Field name to filter on"
+                },
+                "operator": {
+                  "type": "string",
+                  "enum": [
+                    "=",
+                    "!=",
+                    ">",
+                    "<",
+                    ">=",
+                    "<=",
+                    "LIKE",
+                    "IS NULL",
+                    "IS NOT NULL"
+                  ],
+                  "description": "Comparison operator"
+                },
+                "value": {
+                  "type": "string",
+                  "description": "Value to compare against"
+                }
+              }
+            }
+          },
+          "dateRange": {
+            "type": "object",
+            "properties": {
+              "start": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Start date for filtering"
+              },
+              "end": {
+                "type": "string",
+                "format": "date-time",
+                "description": "End date for filtering"
+              }
+            }
+          }
+        }
+      },
+      "DataRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "dataset_id": {
+            "type": "integer",
+            "description": "Reference to Dataset model"
+          },
+          "connection_id": {
+            "type": "integer",
+            "description": "Reference to Connection model"
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "GET",
+              "POST",
+              "PUT",
+              "DELETE",
+              "PATCH"
+            ]
+          },
+          "route": {
+            "type": "string",
+            "description": "API endpoint path"
+          },
+          "headers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "body": {
+            "type": "string",
+            "description": "Request body in JSON string format"
+          },
+          "useGlobalHeaders": {
+            "type": "boolean",
+            "default": true
+          },
+          "query": {
+            "type": "string"
+          },
+          "pagination": {
+            "type": "boolean",
+            "default": false
+          },
+          "items": {
+            "type": "string",
+            "default": "items",
+            "description": "Path to items array in response"
+          },
+          "itemsLimit": {
+            "type": "integer",
+            "default": 0,
+            "description": "Maximum number of items to return"
+          },
+          "offset": {
+            "type": "string",
+            "default": "offset",
+            "description": "Pagination offset field name"
+          },
+          "paginationField": {
+            "type": "string",
+            "description": "Field used for pagination"
+          },
+          "template": {
+            "type": "string",
+            "description": "Template type for request formatting"
+          },
+          "conditions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "field": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                },
+                "operator": {
+                  "type": "string",
+                  "enum": [
+                    "=",
+                    "!=",
+                    ">",
+                    "<",
+                    ">=",
+                    "<=",
+                    "LIKE",
+                    "IS NULL",
+                    "IS NOT NULL"
+                  ]
+                }
+              }
+            }
+          },
+          "configuration": {
+            "type": "object",
+            "description": "Additional configuration options",
+            "additionalProperties": true
+          },
+          "variables": {
+            "type": "object",
+            "description": "Request variables",
+            "additionalProperties": true
+          },
+          "Connection": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "subType": {
+                "type": "string"
+              },
+              "host": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "NewDataRequest": {
+        "type": "object",
+        "properties": {
+          "chart_id": {
+            "type": "integer"
+          },
+          "dataset_id": {
+            "type": "integer"
+          },
+          "connection_id": {
+            "type": "integer"
+          },
+          "query": {
+            "type": "string"
+          },
+          "conditions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "field": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                },
+                "operator": {
+                  "type": "string",
+                  "enum": [
+                    "=",
+                    "!=",
+                    ">",
+                    "<",
+                    ">=",
+                    "<=",
+                    "LIKE", 
+                    "IS NULL",
+                    "IS NOT NULL"
+                  ]
+                }
+              }
+            }
+          },
+          "configuration": {
+            "type": "object",
+            "description": "Additional configuration options",
+            "additionalProperties": true
+          },
+          "variables": {
+            "type": "object",
+            "description": "Request variables", 
+            "additionalProperties": true
+          }
+        }
+      },
+      "DataRequestResponse": {
+        "type": "object",
+        "properties": {
+          "options": {
+            "$ref": "#/components/schemas/Dataset"
+          },
+          "dataRequest": {
+            "type": "object",
+            "properties": {
+              "responseData": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "array",
+                    "description": "Limited to first 20 items in response",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  },
+                  "configuration": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "Dashboard": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "team_id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "brewName": {
+            "type": "string"
+          },
+          "dashboardTitle": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "backgroundColor": {
+            "type": "string",
+            "default": "#103751"
+          },
+          "titleColor": {
+            "type": "string",
+            "default": "white"
+          },
+          "headerCode": {
+            "type": "string"
+          },
+          "footerCode": {
+            "type": "string"
+          },
+          "logo": {
+            "type": "string"
+          },
+          "logoLink": {
+            "type": "string"
+          },
+          "public": {
+            "type": "boolean",
+            "default": false
+          },
+          "passwordProtected": {
+            "type": "boolean",
+            "default": false
+          },
+          "timezone": {
+            "type": "string"
+          },
+          "updateSchedule": {
+            "type": "object",
+            "properties": {
+              "timezone": {
+                "type": "string",
+                "example": "Asia/Bangkok"
+              },
+              "frequency": {
+                "type": "string",
+                "example": "every_x_minutes",
+                "enum": [
+                  "every_x_minutes",
+                  "every_x_hours",
+                  "every_x_days",
+                  "daily",
+                  "weekly"
+                ]
+              },
+              "frequencyNumber": {
+                "type": "string",
+                "example": "1"
+              },
+              "time": {
+                "type": "object",
+                "properties": {
+                  "hour": {
+                    "type": "integer",
+                    "example": 9
+                  },
+                  "minute": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "second": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "millisecond": {
+                    "type": "integer",
+                    "example": 0
+                  }
+                }
+              }
+            }
+          },
+          "lastUpdatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "Charts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Chart"
+            }
+          }
+        }
+      },
+      "DashboardItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "dashboardTitle": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "team_id": {
+            "type": "integer"
+          },
+          "brewName": {
+            "type": "string"
+          },
+          "backgroundColor": {
+            "type": "string"
+          },
+          "titleColor": {
+            "type": "string"
+          },
+          "headerCode": {
+            "type": "string"
+          },
+          "footerCode": {
+            "type": "string"
+          },
+          "public": {
+            "type": "boolean",
+            "default": false
+          },
+          "password": {
+            "type": "string"
+          },
+          "autoUpdate": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "default": false
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "every_x_minutes",
+                  "every_x_hours",
+                  "every_x_days",
+                  "daily",
+                  "weekly"
+                ]
+              },
+              "frequencyNumber": {
+                "type": "string",
+                "example": "1"
+              },
+              "time": {
+                "type": "object",
+                "properties": {
+                  "hour": {
+                    "type": "integer",
+                    "example": 9
+                  },
+                  "minute": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "second": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "millisecond": {
+                    "type": "integer",
+                    "example": 0
+                  }
+                }
+              }
+            }
+          },
+          "lastUpdatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "Charts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "layout": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "NewDashboard": {
+        "type": "object",
+        "required": [
+          "name",
+          "team_id"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "team_id": {
+            "type": "integer"
+          },
+          "dashboardTitle": {
+            "type": "string"
+          },
+          "description": {
             "type": "string"
           }
         }
       },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
+      "DashboardUpdate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
           },
-          {
-            "required": [
-              "id"
-            ],
+          "dashboardTitle": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "backgroundColor": {
+            "type": "string"
+          },
+          "titleColor": {
+            "type": "string"
+          },
+          "headerCode": {
+            "type": "string"
+          },
+          "footerCode": {
+            "type": "string"
+          },
+          "public": {
+            "type": "boolean"
+          },
+          "passwordProtected": {
+            "type": "boolean"
+          },
+          "timezone": {
+            "type": "string"
+          },
+          "updateSchedule": {
             "type": "object",
             "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
+              "timezone": {
+                "type": "string",
+                "example": "Asia/Bangkok"
+              },
+              "frequency": {
+                "type": "string",
+                "example": "every_x_minutes",
+                "enum": [
+                  "every_x_minutes",
+                  "every_x_hours",
+                  "every_x_days",
+                  "daily",
+                  "weekly"
+                ]
+              },
+              "frequencyNumber": {
+                "type": "string",
+                "example": "1"
+              },
+              "time": {
+                "type": "object",
+                "properties": {
+                  "hour": {
+                    "type": "integer",
+                    "example": 9
+                  },
+                  "minute": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "second": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "millisecond": {
+                    "type": "integer",
+                    "example": 0
+                  }
+                }
               }
             }
           }
-        ]
+        }
       },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
+      "Chart": {
         "type": "object",
         "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
+          "id": {
+            "type": "string"
           },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "subType": {
+            "type": "string"
+          },
+          "chartData": {
+            "type": "object"
+          },
+          "chartDataUpdated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "public": {
+            "type": "boolean"
+          },
+          "shareable": {
+            "type": "boolean"
+          },
+          "ChartDatasetConfigs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "$ref": "#/components/schemas/ChartDatasetConfig"
+            }
+          }
+        }
+      },
+      "NewChart": {
+        "type": "object",
+        "required": [
+          "name",
+          "type"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "subType": {
+            "type": "string"
+          },
+          "chartData": {
+            "type": "object"
+          },
+          "chartDataUpdated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "public": {
+            "type": "boolean"
+          },
+          "shareable": {
+            "type": "boolean"
+          },
+          "ChartDatasetConfigs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        }
+      },
+      "ChartUpdate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "subType": {
+            "type": "string"
+          },
+          "chartData": {
+            "type": "object"
+          },
+          "ChartDatasetConfigs": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "ChartDatasetConfig": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "chart_id": {
+            "type": "integer"
+          },
+          "dataset_id": {
+            "type": "integer"
+          },
+          "formula": {
+            "type": "string"
+          },
+          "datasetColor": {
+            "type": "string"
+          },
+          "fillColor": {
+            "type": "string"
+          },
+          "fill": {
+            "type": "boolean",
+            "default": false
+          },
+          "multiFill": {
+            "type": "boolean",
+            "default": false
+          },
+          "legend": {
+            "type": "string"
+          },
+          "pointRadius": {
+            "type": "integer"
+          },
+          "excludedFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sort": {
+            "type": "string"
+          },
+          "columnsOrder": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "order": {
+            "type": "integer",
+            "default": 0
+          },
+          "maxRecords": {
+            "type": "integer"
+          },
+          "goal": {
+            "type": "integer"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
           "message": {
+            "type": "string"
+          },
+          "error": {
             "type": "string"
           }
         }

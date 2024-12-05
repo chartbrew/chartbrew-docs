@@ -1,86 +1,133 @@
 ---
 title: 'Quickstart'
-description: 'Start building awesome documentation in under 5 minutes'
+description: 'Get your Chartbrew set up locally or in the cloud'
 ---
 
-## Setup your development
+## Prerequisites
 
-Learn how to update your docs locally and deploy them to the public.
+**NodeJS** v20+ <i>(use only even versions)</i>
 
-### Edit and preview
+**NPM**
 
-<AccordionGroup>
-  <Accordion icon="github" title="Clone your docs locally">
-    During the onboarding process, we created a repository on your Github with
-    your docs content. You can find this repository on our
-    [dashboard](https://dashboard.mintlify.com). To clone the repository
-    locally, follow these
-    [instructions](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
-    in your terminal.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Preview changes">
-    Previewing helps you make sure your changes look as intended. We built a
-    command line interface to render these changes locally. 1. Install the
-    [Mintlify CLI](https://www.npmjs.com/package/mintlify) to preview the
-    documentation changes locally with this command: ``` npm i -g mintlify ```
-    2. Run the following command at the root of your documentation (where
-    `mint.json` is): ``` mintlify dev ```
-  </Accordion>
-</AccordionGroup>
+**MySQL** (v5+) or **PostgreSQL** (12.5+)
 
-### Deploy your changes
+**Redis** (v6+)
 
-<AccordionGroup>
+## Getting Started
 
-<Accordion icon="message-bot" title="Install our Github app">
-  Our Github app automatically deploys your changes to your docs site, so you
-  don't need to manage deployments yourself. You can find the link to install on
-  your [dashboard](https://dashboard.mintlify.com). Once the bot has been
-  successfully installed, there should be a check mark next to the commit hash
-  of the repo.
-</Accordion>
-<Accordion icon="rocket" title="Push your changes">
-  [Commit and push your changes to
-  Git](https://docs.github.com/en/get-started/using-git/pushing-commits-to-a-remote-repository#about-git-push)
-  for your changes to update in your docs site. If you push and don't see that
-  the Github app successfully deployed your changes, you can also manually
-  update your docs through our [dashboard](https://dashboard.mintlify.com).
-</Accordion>
+### Installation & Setup
 
-</AccordionGroup>
 
-## Update your docs
+<Note>
+The setup doesn't work in Windows PowerShell or cmd.exe. If you're using Windows, please use a bash command line like [Git Bash](https://git-scm.com/downloads) or [cygwin](https://www.cygwin.com/install.html)
+</Note>
 
-Add content directly in your files with MDX syntax and React components. You can use any of our components, or even build your own.
+#### Create a Chartbrew database
 
-<CardGroup>
+Chartbrew works with both MySQL and PostgreSQL. You can use any of the two, but you need to create a database first.
 
-<Card title="Style Your Docs" icon="paintbrush" href="/settings/global">
-  Add flair to your docs with personalized branding.
-</Card>
+[Follow the instruction here.](/database-configuration/#mysql)
 
-<Card
-  title="Add API Endpoints"
-  icon="square-code"
-  href="/api-playground/configuration"
->
-  Implement your OpenAPI spec and enable API user interaction.
-</Card>
+#### Get and setup the project
 
-<Card
-  title="Integrate Analytics"
-  icon="chart-mixed"
-  href="/analytics/supported-integrations"
->
-  Draw insights from user interactions with your documentation.
-</Card>
+```sh
+git clone https://github.com/chartbrew/chartbrew.git
+cd chartbrew && npm run setup
+```
 
-<Card
-  title="Host on a Custom Domain"
-  icon="browser"
-  href="/settings/custom-domain/subdomain"
->
-  Keep your docs on your own website's subdomain.
-</Card>
+### Set up the environmental variables
 
-</CardGroup>
+All the environmental variables that need to be set are found in the `.env-template` file in the root folder of the project. If you ran the setup above, you should already have a `.env` file there as well. If not, copy the template file and rename it `.env`.
+
+Make sure you fill out the `production` and `development` sections accordingly.
+
+[See the full list of variables here](/quickstart#environmental-variables)
+
+
+### Run the project locally
+
+Open two terminals, one for front-end and the other for back-end.
+
+```sh
+# frontend
+cd client/
+npm run start
+
+# backend
+cd server/
+npm run start-dev
+```
+
+### Set up Redis for automatic dataset updates
+
+Chartbrew uses queues to update datasets automatically and it uses [Redis](https://redis.io/) to achieve this. In order for your datasets and charts to update automatically, you need to set up Redis first.
+
+[Find out how to set up Redis on various platforms here.](https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/).
+
+## Tech stack
+
+**Backend**
+
+* [NodeJS](https://nodejs.org/en/)
+* [ExpressJS](https://expressjs.com/)
+* [Sequelize ORM](https://sequelize.org/)
+* [Nodemailer](https://nodemailer.com/about/)
+* [BullMQ](https://github.com/OptimalBits/bull)
+* [Redis](https://redis.io/)
+
+**Frontend**
+
+* [ReactJS](https://reactjs.org/)
+* [Redux](https://redux.js.org/)
+* [NextUI](https://nextui.org/)
+* [ChartJs](https://www.chartjs.org/)
+
+**Docs**
+
+* [Vitepress](https://github.com/vuejs/vitepress)
+
+## Environmental variables
+
+The table below shows the `production` variables. The `development` variables have the same naming, but they are appended with `_DEV` (example: `CB_DB_NAME` -> `CB_DB_NAME_DEV`)
+
+| Variable      | Default value | Description  |
+| ------------- |:-------------:| ------------ |
+| CB_DB_NAME <br /><br /> `required` | `chartbrew` | The name of the database |
+| CB_DB_USERNAME <br /><br /> `required` | No default | The username of the user that has access to the database |
+| CB_DB_PASSWORD | No default | The password associated with the database user |
+| CB_DB_HOST <br /><br /> `required` | `localhost` | The host address where the database is located |
+| CB_DB_PORT | `3306` | The port of the hosting address |
+| CB_DB_DIALECT <br /><br /> `required` | `mysql` | Which database to use between `mysql` and `postgres` |
+| CB_DB_CERT | No default | If your DB requires an SSL connection, use this variable to provide the string value of the certificate |
+| CB_ENCRYPTION_KEY <br /><br /> `required` | A key will be generate for you during the first run | A secure 32 bytes string which is used to encrypt the data in the database. [Click here](#generate-the-encryption-key) to see how you can generate a key. |
+| CB_REDIS_HOST | `localhost` | The host address where the Redis server is located |
+| CB_REDIS_PORT | `6379` | The port of the Redis server |
+| CB_REDIS_PASSWORD | No default | The password for the Redis server, if required |
+| CB_REDIS_DB | `0` | The Redis database number to use |
+| CB_REDIS_CA | No default | The string value of the certificate |
+| CB_API_HOST <br /><br /> `required` | `localhost` | The address where the `server` app is running from. This variable is used internally by the `server` app. <br /> **This value is overwritten by the PORT variable (if set)**|
+| CB_API_PORT <br /><br /> `required` | `4019` | The port where the `server` app is running from. This variable is used internally by the `server` app |
+| VITE_APP_CLIENT_HOST <br /><br /> `required` | `http://localhost:4018` | The full address where the `client` app is running from. This variable is used in the `client` app and it's populated during the building process.<br /><br />`Note` The app needs to be restarted/rebuilt when this value is changed. |
+| VITE_APP_CLIENT_PORT <br /><br /> `required` | `4018` | The port where the `client` app is running from. This variable is used in the `client` app and it's populated during the building process.<br /><br />`Note` The app needs to be restarted/rebuilt when this value is changed. |
+| VITE_APP_API_HOST <br /><br /> `required` | `http://localhost:4019` | The full address where the `server` app is running. This variable is used by the `client` app.<br /><br />`Note` The app needs to be restarted/rebuilt when this value is changed. |
+| CB_MAIL_HOST | `smtp.gmail.com` | The server host of the email provider |
+| CB_MAIL_USER | No default | The username used to log in on the email server |
+| CB_MAIL_PASS | No deafult | The password used to log in on the email server |
+| CB_MAIL_PORT | `465` | The port used to connect to the email server |
+| CB_MAIL_SECURE | `true` | `true` - Use SSL to connect to the email server <br /><br />`false` - Use TLS to connect to the email server |
+| CB_ADMIN_MAIL | `hello@example.com` | The email address used to send the emails from |
+| CB_RESTRICT_TEAMS | `0` | `0` - New users will have their own team created on sign-up. <br /><br />`1` - New users don't have a team on signup and can't create their own. |
+| CB_RESTRICT_SIGNUP | `0` | `0` - Anyone can create accounts from the signup page <br /><br />`1` - New users can only sign up using invite links |
+| CB_GOOGLE_CLIENT_ID | No default | Google app Client ID generated from the <a href="https://console.cloud.google.com/" target="_blank" rel="noreferrer noopener">Console</a> <br /><br />(Needed for Google integrations) |
+| CB_GOOGLE_CLIENT_SECRET | No default | Google app Client Secret generated from the <a href="https://console.cloud.google.com/" target="_blank" rel="noreferrer noopener">Console</a> <br /><br />(Needed for Google integrations) |
+| CB_BACKEND_WORKERS | `4` | Some background tasks in Chartbrew will use workers to spread work on multiple threads. Still testing, but for best performance, set this to the number of threads your CPU has |
+
+### Generate the encryption key
+
+You will need a 32 bytes AES encryption key for the `CB_ENCRYPTION_KEY` variable. Chartbrew generates both `CB_ENCRYPTION_KEY` and `CB_ENCRYPTION_KEY_DEV` for you during the first run, but if you wish to have control over the value, you can generate it yourself.
+
+Run the following command to generate a valid key:
+
+```sh
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```

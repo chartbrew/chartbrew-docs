@@ -1,0 +1,16 @@
+---
+title: 'Create a chart from scratch'
+description: 'This guide will show you how you can create a chart in a team that does not have any content'
+---
+
+<Note>
+  Creating a chart is a multi-step process since the current API was developed to be used with Chartbrew's frontend. 
+  In the future, we plan to introduce new endpoints to make the process easier.
+</Note>
+
+1. Create a `Connection` to authenticate with your data source - [**/team/:team_id/connection**](/api-reference/endpoint/connections/create)
+2. Create a `Dataset` that we will use to format the data from the data source - [**/team/:team_id/dataset**](/api-reference/endpoint/datasets/create)
+3. Create a `DataRequest` to fetch the data from the data source. We need to connect this to the dataset we created before using the `dataset_id` field - [**/team/:team_id/dataset/:dataset_id/dataRequest**](/api-reference/endpoint/datarequests/create)
+4. Create a `Dashboard` where we will place the chart - [**/project**](/api-reference/endpoint/dashboards/create)
+5. Create a `Chart` and connect it to the dashboard we created before using the `project_id` field - [**/project/:project_id/chart**](/api-reference/endpoint/charts/create)
+6. Create a `ChartDatasetConfig` and connect it to the relevant dataset and chart through the `dataset_id` and `chart_id` fields - [**/project/:project_id/chart/:chart_id/chart-dataset-config**](/api-reference/endpoint/chartdatasetconfigs/create)
