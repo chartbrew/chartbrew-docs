@@ -27,12 +27,12 @@
     "description": "Chartbrew Documentation - Learn how to automate your reporting with Chartbrew.",
     "og:description": "Chartbrew Documentation - Learn how to automate your reporting with Chartbrew.",
     "og:type": "website",
-    "og:image": "https://cdn2.chartbrew.com/chartbrew_visualize_banner_6.png",
+    "og:image": "https://cdn2.chartbrew.com/banners/MainOG.png",
     "og:url": "https://docs.chartbrew.com",
     "twitter:card": "summary_large_image",
     "twitter:title": "Chartbrew Docs",
     "twitter:description": "Chartbrew Documentation - Learn how to automate your reporting with Chartbrew.",
-    "twitter:image": "https://cdn2.chartbrew.com/chartbrew_visualize_banner_6.png",
+    "twitter:image": "https://cdn2.chartbrew.com/banners/MainOG.png",
     "twitter:site": "@chartbrew"
   },
   "topbarLinks": [
