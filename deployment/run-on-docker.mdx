@@ -38,7 +38,7 @@ docker run -p 4019:4019 -p 4018:4018 \
   razvanilin/chartbrew
 ```
 
-### Changing environmental variables
+### Changing environment variables
 
 If you change any of the `VITE_APP_*` variables after the first run, **it's important** to build the client application again from inside the image. This is done by running the following command:
 
@@ -63,5 +63,5 @@ The `4019` port is used by the API and `4018` for the client app (UI). Feel free
 * `VITE_APP_CLIENT_PORT` The port number where your client application will run from.
 * `VITE_APP_API_HOST` this is used for the client application to know where to make the API requests. This is the address of the API (backend).
 
-If the setup fails in any way, please double-check that the environmental variables are set correctly. Check that both API and Client apps are running, and if you can't get it running, please [open a new issue](https://github.com/chartbrew/chartbrew/issues/new) with as much info as you can share (logs, vars).
+If the setup fails in any way, please double-check that the environment variables are set correctly. Check that both API and Client apps are running, and if you can't get it running, please [open a new issue](https://github.com/chartbrew/chartbrew/issues/new) with as much info as you can share (logs, vars).
 

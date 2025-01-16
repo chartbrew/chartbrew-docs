@@ -18,7 +18,7 @@ With time, this guide will be updated with more ways of deploying. Any PR is wel
 
 Follow the [Getting Started](/quickstart) guide to set up the project somewhere on your server.
 
-Please note that you have to set all the production environmental variables in this case.
+Please note that you have to set all the production environment variables in this case.
 
 Keep in mind that the tools used in this guide are used as an example but they work really well. There might be multiple other tools that you can use, so feel free to do so if you wish.
 
@@ -33,7 +33,7 @@ The backend doesn't need to undergo a build process. You need the following thin
 - MySQL running
 - A database is created so that Chartbrew can use it (it must be empty if it wasn't used by Chartbrew before)
 - `npm install` ran in the server folder or `npm run setup` in the project root folder
-- Environmental variables are set for Production (check `.env-template` in the root folder to see which)
+- Environment variables are set for Production (check `.env-template` in the root folder to see which)
 
 Once all these are checked, we can either run `npm run start`, or use an external tool like [`pm2`](https://pm2.keymetrics.io) to monitor and manage Node apps better.
 

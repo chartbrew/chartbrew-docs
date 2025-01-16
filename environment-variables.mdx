@@ -1,0 +1,52 @@
+---
+title: 'Environment Variables'
+description: 'Environment variables for Chartbrew'
+---
+
+The table below shows the `production` variables. The `development` variables have the same naming, but they are appended with `_DEV` (example: `CB_DB_NAME` -> `CB_DB_NAME_DEV`)
+
+| Variable      | Default value | Description  |
+| ------------- |:-------------:| ------------ |
+| CB_DB_NAME <br /> CB_DB_NAME_DEV <br /> `required` | `chartbrew` | The name of the database |
+| CB_DB_USERNAME <br /> CB_DB_USERNAME_DEV <br /> `required` | No default | The username of the user that has access to the database |
+| CB_DB_PASSWORD <br /> CB_DB_PASSWORD_DEV | No default | The password associated with the database user |
+| CB_DB_HOST <br /> CB_DB_HOST_DEV <br /> `required` | `localhost` | The host address where the database is located |
+| CB_DB_PORT <br /> CB_DB_PORT_DEV | `3306` | The port of the hosting address |
+| CB_DB_DIALECT <br /> CB_DB_DIALECT_DEV <br /> `required` | `mysql` | Which database to use between `mysql` and `postgres` |
+| CB_DB_CERT <br /> CB_DB_CERT_DEV | No default | If your DB requires an SSL connection, use this variable to provide the string value of the certificate |
+| CB_ENCRYPTION_KEY <br /> CB_ENCRYPTION_KEY_DEV <br /> `required` | A key will be generate for you during the first run | A secure 32 bytes string which is used to encrypt the data in the database. [Click here](#generate-the-encryption-key) to see how you can generate a key. |
+| CB_OPENAI_API_KEY <br /> CB_OPENAI_API_KEY_DEV | No default | The API key for the OpenAI API |
+| CB_OPENAI_MODEL <br /> CB_OPENAI_MODEL_DEV | `gpt-4o-mini` | The model to use for the OpenAI API |
+| CB_REDIS_HOST <br /> CB_REDIS_HOST_DEV | `localhost` | The host address where the Redis server is located |
+| CB_REDIS_PORT <br /> CB_REDIS_PORT_DEV | `6379` | The port of the Redis server |
+| CB_REDIS_PASSWORD <br /> CB_REDIS_PASSWORD_DEV | No default | The password for the Redis server, if required |
+| CB_REDIS_DB <br /> CB_REDIS_DB_DEV | `0` | The Redis database number to use |
+| CB_REDIS_CA <br /> CB_REDIS_CA_DEV | No default | The string value of the certificate |
+| CB_API_HOST <br /> CB_API_HOST_DEV <br /> `required` | `localhost` | The address where the `server` app is running from. This variable is used internally by the `server` app. <br /> **This value is overwritten by the PORT variable (if set)**|
+| CB_API_PORT <br /> CB_API_PORT_DEV <br /> `required` | `4019` | The port where the `server` app is running from. This variable is used internally by the `server` app |
+| VITE_APP_CLIENT_HOST <br /> VITE_APP_CLIENT_HOST_DEV <br /> `required` | `http://localhost:4018` | The full address where the `client` app is running from. This variable is used in the `client` app and it's populated during the building process.<br /><br />`Note` The app needs to be restarted/rebuilt when this value is changed. |
+| VITE_APP_CLIENT_PORT <br /> VITE_APP_CLIENT_PORT_DEV <br /> `required` | `4018` | The port where the `client` app is running from. This variable is used in the `client` app and it's populated during the building process.<br /><br />`Note` The app needs to be restarted/rebuilt when this value is changed. |
+| VITE_APP_API_HOST <br /> VITE_APP_API_HOST_DEV <br /> `required` | `http://localhost:4019` | The full address where the `server` app is running. This variable is used by the `client` app.<br /><br />`Note` The app needs to be restarted/rebuilt when this value is changed. |
+| CB_MAIL_HOST <br /> CB_MAIL_HOST_DEV | `smtp.gmail.com` | The server host of the email provider |
+| CB_MAIL_USER <br /> CB_MAIL_USER_DEV | No default | The username used to log in on the email server |
+| CB_MAIL_PASS <br /> CB_MAIL_PASS_DEV | No deafult | The password used to log in on the email server |
+| CB_MAIL_PORT <br /> CB_MAIL_PORT_DEV | `465` | The port used to connect to the email server |
+| CB_MAIL_SECURE <br /> CB_MAIL_SECURE_DEV | `true` | `true` - Use SSL to connect to the email server <br /><br />`false` - Use TLS to connect to the email server |
+| CB_ADMIN_MAIL <br /> CB_ADMIN_MAIL_DEV | `hello@example.com` | The email address used to send the emails from |
+| CB_RESTRICT_TEAMS <br /> CB_RESTRICT_TEAMS_DEV | `0` | `0` - New users will have their own team created on sign-up. <br /><br />`1` - New users don't have a team on signup and can't create their own. |
+| CB_RESTRICT_SIGNUP <br /> CB_RESTRICT_SIGNUP_DEV | `0` | `0` - Anyone can create accounts from the signup page <br /><br />`1` - New users can only sign up using invite links |
+| CB_GOOGLE_CLIENT_ID <br /> CB_GOOGLE_CLIENT_ID_DEV | No default | Google app Client ID generated from the <a href="https://console.cloud.google.com/" target="_blank" rel="noreferrer noopener">Console</a> <br /><br />(Needed for Google integrations) |
+| CB_GOOGLE_CLIENT_SECRET <br /> CB_GOOGLE_CLIENT_SECRET_DEV | No default | Google app Client Secret generated from the <a href="https://console.cloud.google.com/" target="_blank" rel="noreferrer noopener">Console</a> <br /><br />(Needed for Google integrations) |
+| CB_BACKEND_WORKERS <br /> CB_BACKEND_WORKERS_DEV | `4` | Some background tasks in Chartbrew will use workers to spread work on multiple threads. Still testing, but for best performance, set this to the number of threads your CPU has |
+| CB_OPENAI_API_KEY <br /> CB_OPENAI_API_KEY_DEV | No default | The API key for the OpenAI API |
+| CB_OPENAI_MODEL <br /> CB_OPENAI_MODEL_DEV | `gpt-4o-mini` | The model to use for the OpenAI API |
+
+### Generate the encryption key
+
+You will need a 32 bytes AES encryption key for the `CB_ENCRYPTION_KEY` variable. Chartbrew generates both `CB_ENCRYPTION_KEY` and `CB_ENCRYPTION_KEY_DEV` for you during the first run, but if you wish to have control over the value, you can generate it yourself.
+
+Run the following command to generate a valid key:
+
+```sh
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```

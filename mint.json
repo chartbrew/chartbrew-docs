@@ -16,9 +16,9 @@
     }
   },
   "api": {
-    "baseUrl": "https://api.chartbrew.com",
+    "baseUrl": "http://localhost:4021",
     "playground": {
-      "disableProxy": false
+      "disableProxy": true
     }
   },
   "metadata": {
@@ -79,6 +79,7 @@
       "pages": [
         "introduction",
         "quickstart",
+        "environment-variables",
         "database-configuration"
       ]
     },
