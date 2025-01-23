@@ -4,8 +4,10 @@ description: How to run Chartbrew on Docker
 ---
 
 <Warning>
-The setup is not yet updated for PostgreSQL. Please [open a PR](https://github.com/chartbrew/chartbrew/compare) or [a new issue](https://github.com/chartbrew/chartbrew/issues/new) if you have a solution or encounter any problems that can help us with the support.
+The setup is not yet updated for PostgreSQL. Please [open a PR](https://github.com/chartbrew/chartbrew/compare) if you have a `docker-compose.yml` file that works for PostgreSQL.
 </Warning>
+
+## Using the docker image directly
 
 A [Chartbrew docker image](https://hub.docker.com/r/razvanilin/chartbrew) is built whenever a new version is released.
 
@@ -65,3 +67,16 @@ The `4019` port is used by the API and `4018` for the client app (UI). Feel free
 
 If the setup fails in any way, please double-check that the environment variables are set correctly. Check that both API and Client apps are running, and if you can't get it running, please [open a new issue](https://github.com/chartbrew/chartbrew/issues/new) with as much info as you can share (logs, vars).
 
+## Using docker-compose
+
+If you want to use docker-compose, you can use the `docker-compose.yml` file from the root of the project as an example.
+
+> [Go to the docker-compose.yml file](https://github.com/chartbrew/chartbrew/blob/master/docker-compose.yml)
+
+The `docker-compose.yml` file is using the `.env` file to set the environment variables. Ensure you have the file in the root of the project and complete it with the required values. You can copy the `.env-template` file and check the [Environment variables](/environment-variables) section for more information.
+
+Once you have the `.env` file, you can run the following command to start the application:
+
+```sh
+docker-compose up -d
+```
