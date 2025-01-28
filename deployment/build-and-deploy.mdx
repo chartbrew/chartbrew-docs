@@ -82,6 +82,8 @@ vim app.config.json
 }
 ```
 
+Ensure that the port number after `-l` is the same as the `VITE_APP_CLIENT_PORT` in your `.env` file.
+
 Now you can start the front-end app with `pm2 start app.config.json`
 
 Using the methods above, the app can be accessed on localhost. To serve it on a domain, check the deployment guides for different platforms in the sidebar.
