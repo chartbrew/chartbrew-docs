@@ -74,9 +74,9 @@ vim app.config.json
   apps : [
     {
       name: "cbc-client",
-      script: "npm",
+      script: "npx",
       interpreter: "none",
-      args: "run preview"
+      args: "serve -s dist -l 4018"
     }
   ]
 }
