@@ -1025,6 +1025,125 @@
         ]
       }
     },
+    "/team/{team_id}/datasets/{dataset_id}/dataRequests/{id}/variableBindings": {
+      "post": {
+        "summary": "Create a new variable binding",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VariableBinding"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Variable binding created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataRequest"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/team/{team_id}/datasets/{dataset_id}/dataRequests/{id}/variableBindings/{variable_id}": {
+      "put": {
+        "summary": "Update a variable binding",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "variable_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VariableBinding"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Variable binding updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/project": {
       "post": {
         "description": "Create a new dashboard",
@@ -1891,7 +2010,7 @@
             }
           },
           {
-            "name": "cdcId",
+            "name": "cdc_id",
             "in": "path",
             "description": "ID of the chart dataset configuration",
             "required": true,
@@ -1953,7 +2072,7 @@
             }
           },
           {
-            "name": "cdcId",
+            "name": "cdc_id",
             "in": "path",
             "description": "ID of the chart dataset configuration",
             "required": true,
@@ -2767,6 +2886,12 @@
                 "type": "string"
               }
             }
+          },
+          "VariableBindings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VariableBinding"
+            }
           }
         }
       },
@@ -2852,6 +2977,47 @@
                 }
               }
             }
+          }
+        }
+      },
+      "VariableBinding": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "entity_type": {
+            "type": "string",
+            "enum": [
+              "Project",
+              "Connection",
+              "Dataset",
+              "DataRequest",
+              "Template"
+            ]
+          },
+          "entity_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "default_value": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },

@@ -1,0 +1,219 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Chartbrew Docs",
+  "colors": {
+    "primary": "#048BDE",
+    "light": "#048BDE",
+    "dark": "#048BDE"
+  },
+  "favicon": "/favicon.png",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "quickstart",
+              "environment-variables",
+              "database-configuration"
+            ]
+          },
+          {
+            "group": "Build",
+            "pages": [
+              "deployment/build-and-deploy",
+              "deployment/run-on-docker",
+              "deployment/deploy-with-apache",
+              "deployment/deploy-on-heroku-and-vercel",
+              "deployment/deploy-on-render",
+              "deployment/deploy-on-digitalocean"
+            ]
+          },
+          {
+            "group": "Integrations",
+            "pages": [
+              "integrations/google-analytics",
+              "integrations/webhooks"
+            ]
+          },
+          {
+            "group": "Architecture",
+            "pages": [
+              "architecture/backend",
+              "architecture/frontend"
+            ]
+          },
+          {
+            "group": "Migrations",
+            "pages": [
+              "migrations/migrate-to-v1.0.0-beta.9",
+              "migrations/migrate-to-v3"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "API Documentation",
+            "pages": [
+              "api-reference/introduction"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "api-reference/guides/create-chart"
+            ]
+          },
+          {
+            "group": "Dashboards",
+            "pages": [
+              "api-reference/endpoint/dashboards/info",
+              "api-reference/endpoint/dashboards/get",
+              "api-reference/endpoint/dashboards/list",
+              "api-reference/endpoint/dashboards/create",
+              "api-reference/endpoint/dashboards/update",
+              "api-reference/endpoint/dashboards/delete"
+            ]
+          },
+          {
+            "group": "Connections",
+            "pages": [
+              "api-reference/endpoint/connections/info",
+              "api-reference/endpoint/connections/list",
+              "api-reference/endpoint/connections/get",
+              "api-reference/endpoint/connections/create",
+              "api-reference/endpoint/connections/update",
+              "api-reference/endpoint/connections/delete",
+              "api-reference/endpoint/connections/update-files",
+              "api-reference/endpoint/connections/test"
+            ]
+          },
+          {
+            "group": "Datasets",
+            "pages": [
+              "api-reference/endpoint/datasets/info",
+              "api-reference/endpoint/datasets/list",
+              "api-reference/endpoint/datasets/get",
+              "api-reference/endpoint/datasets/create",
+              "api-reference/endpoint/datasets/update",
+              "api-reference/endpoint/datasets/delete",
+              "api-reference/endpoint/datasets/fetch-dataset-data"
+            ]
+          },
+          {
+            "group": "Data Requests",
+            "pages": [
+              "api-reference/endpoint/datarequests/info",
+              "api-reference/endpoint/datarequests/create",
+              "api-reference/endpoint/datarequests/list",
+              "api-reference/endpoint/datarequests/update",
+              "api-reference/endpoint/datarequests/run",
+              "api-reference/endpoint/datarequests/create-variablebinding",
+              "api-reference/endpoint/datarequests/update-variablebinding"
+            ]
+          },
+          {
+            "group": "Charts",
+            "pages": [
+              "api-reference/endpoint/charts/info",
+              "api-reference/endpoint/charts/get",
+              "api-reference/endpoint/charts/create",
+              "api-reference/endpoint/charts/query",
+              "api-reference/endpoint/charts/delete"
+            ]
+          },
+          {
+            "group": "Chart-Dataset Configs",
+            "pages": [
+              "api-reference/endpoint/chartdatasetconfigs/info",
+              "api-reference/endpoint/chartdatasetconfigs/create",
+              "api-reference/endpoint/chartdatasetconfigs/update",
+              "api-reference/endpoint/chartdatasetconfigs/delete"
+            ]
+          }
+        ]
+      }
+    ],
+    "global": {
+      "anchors": [
+        {
+          "anchor": "Website",
+          "href": "https://chartbrew.com",
+          "icon": "globe"
+        },
+        {
+          "anchor": "Community",
+          "href": "https://discord.gg/KwGEbFk",
+          "icon": "Discord"
+        },
+        {
+          "anchor": "Blog",
+          "href": "https://chartbrew.com/blog",
+          "icon": "newspaper"
+        },
+        {
+          "anchor": "GitHub",
+          "href": "https://github.com/chartbrew/chartbrew",
+          "icon": "github"
+        }
+      ]
+    }
+  },
+  "logo": {
+    "light": "/logo/cb_logo_dark.svg",
+    "dark": "/logo/logo_dark_mode.svg"
+  },
+  "api": {
+    "playground": {
+      "display": "interactive",
+      "proxy": false
+    },
+    "mdx": {
+      "server": "http://localhost:4021"
+    }
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Support",
+        "href": "https://github.com/chartbrew/chartbrew/issues"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Dashboard",
+      "href": "https://app.chartbrew.com"
+    }
+  },
+  "seo": {
+    "metatags": {
+      "title": "Chartbrew Docs",
+      "og:title": "Chartbrew Docs",
+      "description": "Chartbrew Documentation - Learn how to automate your reporting with Chartbrew.",
+      "og:description": "Chartbrew Documentation - Learn how to automate your reporting with Chartbrew.",
+      "og:type": "website",
+      "og:image": "https://cdn2.chartbrew.com/banners/MainOG.png",
+      "og:url": "https://docs.chartbrew.com",
+      "twitter:card": "summary_large_image",
+      "twitter:title": "Chartbrew Docs",
+      "twitter:description": "Chartbrew Documentation - Learn how to automate your reporting with Chartbrew.",
+      "twitter:image": "https://cdn2.chartbrew.com/banners/MainOG.png",
+      "twitter:site": "@chartbrew"
+    },
+    "indexing": "navigable"
+  },
+  "footer": {
+    "socials": {
+      "x": "https://x.com/chartbrew",
+      "github": "https://github.com/chartbrew",
+      "linkedin": "https://linkedin.com/company/chartbrew"
+    }
+  }
+}
