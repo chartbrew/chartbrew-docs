@@ -22,6 +22,7 @@ The table below shows the `production` variables. The `development` variables ha
 | CB_REDIS_PASSWORD <br /> CB_REDIS_PASSWORD_DEV | No default | The password for the Redis server, if required |
 | CB_REDIS_DB <br /> CB_REDIS_DB_DEV | `0` | The Redis database number to use |
 | CB_REDIS_CA <br /> CB_REDIS_CA_DEV | No default | The string value of the certificate |
+| CB_REDIS_CLUSTER_NODES <br /> CB_REDIS_CLUSTER_NODES_DEV | No default | The list of Redis cluster nodes. Format: `host:port,host:port,host:port` |
 | CB_API_HOST <br /> CB_API_HOST_DEV <br /> `required` | `localhost` | The address where the `server` app is running from. This variable is used internally by the `server` app. <br /> **This value is overwritten by the PORT variable (if set)**|
 | CB_API_PORT <br /> CB_API_PORT_DEV <br /> `required` | `4019` | The port where the `server` app is running from. This variable is used internally by the `server` app |
 | VITE_APP_CLIENT_HOST <br /> VITE_APP_CLIENT_HOST_DEV <br /> `required` | `http://localhost:4018` | The full address where the `client` app is running from. This variable is used in the `client` app and it's populated during the building process.<br /><br />`Note` The app needs to be restarted/rebuilt when this value is changed. |
