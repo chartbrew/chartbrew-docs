@@ -1,0 +1,116 @@
+---
+title: "Generate Dashboard Share Token"
+api: "POST /project/{id}/share/token"
+description: "Generate a signed JWT token for secure dashboard sharing with optional parameters and expiration"
+---
+
+This endpoint generates a JWT token for accessing a dashboard with a SharePolicy. The token can include custom parameters, expiration dates, and URL parameter permissions.
+
+## Parameters
+
+<ParamField path="id" type="string" required>
+  The ID of the dashboard/project
+</ParamField>
+
+## Body Parameters
+
+<ParamField body="share_policy" type="object">
+  Share policy configuration to update before generating token
+  <Expandable title="Share Policy Object">
+    <ParamField body="params" type="array">
+      Array of parameters to include in the share policy
+      <Expandable title="Parameter Object">
+        <ParamField body="key" type="string">
+          The parameter name/key
+        </ParamField>
+        <ParamField body="value" type="string">
+          The parameter value
+        </ParamField>
+      </Expandable>
+    </ParamField>
+    <ParamField body="allow_params" type="boolean">
+      Whether to allow URL parameters to override policy parameters
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="exp" type="string">
+  Token expiration date and time in ISO 8601 format (e.g., "2024-12-31T23:59:59Z")
+</ParamField>
+
+## Response
+
+<ResponseField name="token" type="string">
+  The generated JWT access token for dashboard access
+</ResponseField>
+
+<ResponseField name="url" type="string">
+  The complete shareable URL with the access token included
+</ResponseField>
+
+## Example
+
+<RequestExample>
+```bash cURL
+curl -X POST \
+  'https://api.chartbrew.com/project/123/share/token' \
+  -H 'Authorization: Bearer YOUR_API_TOKEN' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "share_policy": {
+      "params": [
+        {
+          "key": "userId",
+          "value": "12345"
+        },
+        {
+          "key": "region",
+          "value": "us-east"
+        }
+      ],
+      "allow_params": true
+    },
+    "exp": "2024-12-31T23:59:59Z"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.chartbrew.com/project/123/share/token', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer YOUR_API_TOKEN',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    share_policy: {
+      params: [
+        { key: 'userId', value: '12345' },
+        { key: 'region', value: 'us-east' }
+      ],
+      allow_params: true
+    },
+    exp: '2024-12-31T23:59:59Z'
+  })
+});
+
+const data = await response.json();
+console.log(data.url); // Use this URL for sharing
+```
+</RequestExample>
+
+<ResponseExample>
+```json Response
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsidHlwZSI6IlByb2plY3QiLCJpZCI6MTIzfSwiaWF0IjoxNjQyNDQwMDAwLCJleHAiOjE3MDM5NzYwMDB9.example_signature",
+  "url": "https://app.chartbrew.com/b/my-dashboard?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsidHlwZSI6IlByb2plY3QiLCJpZCI6MTIzfSwiaWF0IjoxNjQyNDQwMDAwLCJleHAiOjE3MDM5NzYwMDB9.example_signature"
+}
+```
+</ResponseExample>
+
+## Usage Notes
+
+- **Prerequisites**: A SharePolicy must exist for the project before generating tokens. Use the "Create Dashboard Share Policy" endpoint first.
+- **Token Expiration**: If no expiration is specified, the token will have a very long expiration (99999 days).
+- **Parameters**: Parameters defined in the share policy will be passed as variables to the dashboard's charts.
+- **URL Parameters**: If `allow_params` is true, additional parameters can be passed via URL query parameters and will override policy parameters.
+- **Security**: Always use HTTPS when sharing URLs containing access tokens.
