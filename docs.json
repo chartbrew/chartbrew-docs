@@ -72,6 +72,15 @@
             ]
           },
           {
+            "group": "Teams",
+            "pages": [
+              "api-reference/endpoint/team/get",
+              "api-reference/endpoint/team/create",
+              "api-reference/endpoint/team/get-user-teams",
+              "api-reference/endpoint/team/update"
+            ]
+          },
+          {
             "group": "Dashboards",
             "pages": [
               "api-reference/endpoint/dashboards/info",
