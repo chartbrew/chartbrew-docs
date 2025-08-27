@@ -59,6 +59,41 @@
             }
           }
         }
+      },
+      "get": {
+        "description": "Get all teams for the authenticated user",
+        "responses": {
+          "200": {
+            "description": "Array of teams the user is a member of",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserTeams"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/team/{team_id}": {

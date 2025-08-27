@@ -1,7 +1,7 @@
 ---
 title: "Get User Teams"
-openapi: "GET /team/user/{user_id}"
-description: "Get all teams for a user"
+openapi: "GET /team"
+description: "Get all teams for the authenticated user"
 ---
 
-This endpoint returns all teams the user is a member of.
+This endpoint returns all teams the user is a member of. The user is taken from the authentication token.
