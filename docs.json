@@ -79,7 +79,9 @@
               "api-reference/endpoint/dashboards/list",
               "api-reference/endpoint/dashboards/create",
               "api-reference/endpoint/dashboards/update",
-              "api-reference/endpoint/dashboards/delete"
+              "api-reference/endpoint/dashboards/delete",
+              "api-reference/endpoint/dashboards/create-share-policy",
+              "api-reference/endpoint/dashboards/generate-share-token"
             ]
           },
           {
@@ -126,7 +128,10 @@
               "api-reference/endpoint/charts/get",
               "api-reference/endpoint/charts/create",
               "api-reference/endpoint/charts/query",
-              "api-reference/endpoint/charts/delete"
+              "api-reference/endpoint/charts/delete",
+              "api-reference/endpoint/charts/embedded-chart",
+              "api-reference/endpoint/charts/create-share-policy",
+              "api-reference/endpoint/charts/generate-share-token"
             ]
           },
           {
