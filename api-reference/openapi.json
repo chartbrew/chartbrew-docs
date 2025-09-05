@@ -1661,14 +1661,14 @@
         }
       }
     },
-    "/chart/{share_string}/embedded": {
+    "/chart/share/{share_string}": {
       "get": {
-        "description": "Get a chart for embedding (public charts or with valid share token)",
+        "description": "Get a chart for sharing",
         "parameters": [
           {
             "name": "share_string",
             "in": "path",
-            "description": "Share string or chart ID for the embedded chart",
+            "description": "Share policy's share_string",
             "required": true,
             "schema": {
               "type": "string"
@@ -1677,7 +1677,7 @@
           {
             "name": "token",
             "in": "query",
-            "description": "Access token for SharePolicy-protected charts",
+            "description": "Access token generated from the SharePolicy",
             "schema": {
               "type": "string"
             }
@@ -1694,7 +1694,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Embedded chart data",
+            "description": "Chart data",
             "content": {
               "application/json": {
                 "schema": {
@@ -1748,6 +1748,104 @@
           },
           "403": {
             "description": "Access denied"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/project/{id}/share/policy/{policy_id}": {
+      "put": {
+        "description": "Update a share policy for a project",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the project",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policy_id",
+            "in": "path",
+            "description": "ID of the share policy",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SharePolicyUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated share policy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SharePolicy"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response"
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "403": {
+            "description": "Access denied"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "description": "Delete a share policy for a project",
+        "parameters": [
+          {
+            "name": "policy_id",
+            "in": "path",
+            "description": "ID of the share policy",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted share policy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "deleted": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2359,6 +2457,131 @@
           },
           "403": {
             "description": "Access denied"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/project/{project_id}/chart/{chart_id}/share/policy/{policy_id}": {
+      "put": {
+        "description": "Update a share policy for a chart",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "description": "ID of the project",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chart_id",
+            "in": "path",
+            "description": "ID of the chart",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policy_id",
+            "in": "path",
+            "description": "ID of the share policy",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SharePolicyUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated share policy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SharePolicy"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response"
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "403": {
+            "description": "Access denied"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "description": "Delete a share policy for a chart",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "description": "ID of the project",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chart_id",
+            "in": "path",
+            "description": "ID of the chart",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policy_id",
+            "in": "path",
+            "description": "ID of the share policy",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted share policy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "deleted": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -4165,11 +4388,6 @@
           "entity_id": {
             "type": "integer"
           },
-          "visibility": {
-            "type": "string",
-            "enum": ["public", "private", "password", "disabled"],
-            "description": "public: anyone can view, private: can be viewed with signed URL, password: anyone can view with a password, disabled: the share policy is disabled"
-          },
           "params": {
             "type": "array",
             "items": {
@@ -4190,10 +4408,6 @@
             "default": false,
             "description": "Whether to allow parameters to be passed via URL"
           },
-          "password": {
-            "type": "string",
-            "description": "Password for password-protected sharing"
-          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
@@ -4201,6 +4415,36 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "SharePolicyUpdate": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Parameters to include in the share policy. Use this to pass parameters to the dashboard's variables."
+          },
+          "allow_params": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether to allow parameters to be passed via URL"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Token expiration date and time"
           }
         }
       },
