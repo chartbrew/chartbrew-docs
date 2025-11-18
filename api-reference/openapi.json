@@ -735,6 +735,58 @@
         ]
       }
     },
+    "/team/{team_id}/datasets/quick-create": {
+      "post": {
+        "description": "Quickly create a dataset with all its data requests in one go",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "description": "ID of the team",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuickCreateDataset"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created dataset with all data requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dataset"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response"
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "403": {
+            "description": "Access denied"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
     "/team/{team_id}/datasets/{dataset_id}": {
       "get": {
         "description": "Get a dataset by ID",
@@ -3504,6 +3556,189 @@
           }
         }
       },
+      "QuickCreateDataset": {
+        "type": "object",
+        "required": [
+          "team_id"
+        ],
+        "description": "Create a dataset with all its data requests in one API call",
+        "properties": {
+          "team_id": {
+            "type": "integer",
+            "description": "ID of the team"
+          },
+          "project_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "description": "Array of project IDs where members can access the dataset"
+          },
+          "draft": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether the dataset is a draft and should be hidden from dashboard viewers"
+          },
+          "dimension": {
+            "type": "string",
+            "description": "X axis or metric field using traversal syntax - root[].field"
+          },
+          "metric": {
+            "type": "string",
+            "description": "Y axis field using traversal syntax"
+          },
+          "metricOperation": {
+            "type": "string",
+            "default": "none",
+            "description": "Operation to perform on the y-axis - none, sum, avg, min, max, count",
+            "enum": [
+              "none",
+              "count",
+              "count_unique",
+              "sum",
+              "avg",
+              "min",
+              "max"
+            ]
+          },
+          "dateField": {
+            "type": "string",
+            "description": "Date field using traversal syntax. Specifies which field should be used for date filtering."
+          },
+          "dateFormat": {
+            "type": "string",
+            "description": "Date format to use for date filtering. e.g YYYY-MM-DD"
+          },
+          "legend": {
+            "type": "string",
+            "description": "Legend label (name) of the dataset"
+          },
+          "conditions": {
+            "type": "array",
+            "description": "Conditions to apply to the dataset - used for filtering",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "field": {
+                  "type": "string",
+                  "description": "Field using traversal syntax - root[].field"
+                },
+                "operator": {
+                  "type": "string",
+                  "enum": [
+                    "is",
+                    "isNot",
+                    "greaterThan",
+                    "lessThan",
+                    "greaterThanOrEqual",
+                    "lessThanOrEqual",
+                    "contains",
+                    "notContains",
+                    "isNull",
+                    "isNotNull"
+                  ],
+                  "description": "Comparison operator"
+                },
+                "value": {
+                  "type": "string"
+                },
+                "displayValues": {
+                  "type": "boolean",
+                  "description": "Whether to display the values in the dropdown UI"
+                }
+              }
+            }
+          },
+          "fieldsSchema": {
+            "type": "object",
+            "description": "Schema of the fields in the dataset key(field name) => value(type). This gets populated automatically whenever the dataset is used in a chart."
+          },
+          "joinSettings": {
+            "type": "object",
+            "description": "Join settings for the dataset. Use indices (0-based) in joins array to reference data requests before they are created.",
+            "properties": {
+              "joins": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "dr_id": {
+                      "type": "integer",
+                      "description": "Index (0-based) of the data request in dataRequests array, or DataRequest ID after creation"
+                    },
+                    "join_id": {
+                      "type": "integer",
+                      "description": "Index (0-based) of the join data request in dataRequests array, or DataRequest ID after creation"
+                    },
+                    "dr_field": {
+                      "type": "string",
+                      "description": "Field in the dataset to join on"
+                    },
+                    "join_field": {
+                      "type": "string",
+                      "description": "Field in the main source data request to join on"
+                    },
+                    "alias": {
+                      "type": "string",
+                      "description": "Alias for the joined data"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "dataRequests": {
+            "type": "array",
+            "description": "Array of data requests to create with the dataset",
+            "items": {
+              "$ref": "#/components/schemas/QuickCreateDataRequest"
+            }
+          },
+          "main_dr_index": {
+            "type": "integer",
+            "default": 0,
+            "description": "Index (0-based) of the main data request in the dataRequests array. Defaults to 0."
+          },
+          "variableBindings": {
+            "type": "array",
+            "description": "Variable bindings for the dataset. The entity_type and entity_id will be automatically set.",
+            "items": {
+              "$ref": "#/components/schemas/NewVariableBinding"
+            }
+          }
+        }
+      },
+      "NewVariableBinding": {
+        "type": "object",
+        "description": "Variable binding to create. entity_type and entity_id are automatically set based on the parent entity.",
+        "required": [
+          "name",
+          "type"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Variable name. Can be provided with or without {{ }} wrapper (e.g., 'myVar' or '{{myVar}}'). The wrapper will be automatically removed."
+          },
+          "type": {
+            "type": "string",
+            "enum": ["string", "number", "boolean", "date"],
+            "description": "Type of the variable"
+          },
+          "default_value": {
+            "type": "string",
+            "description": "Default value for the variable"
+          },
+          "required": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether the variable is required"
+          }
+        }
+      },
       "DatasetUpdate": {
         "type": "object",
         "properties": {
@@ -3728,9 +3963,7 @@
             }
           },
           "configuration": {
-            "type": "object",
-            "description": "Additional configuration options",
-            "additionalProperties": true
+            "$ref": "#/components/schemas/DataRequestConfiguration"
           },
           "variables": {
             "type": "object",
@@ -3765,12 +3998,77 @@
           }
         }
       },
+      "DataRequestConfiguration": {
+        "type": "object",
+        "description": "Configuration options for data requests. Fields vary by connection type. Only include fields relevant to your connection type.",
+        "properties": {
+          "populateAttributes": {
+            "type": "boolean",
+            "description": "Populate attributes for Customer.io"
+          },
+          "mainCollectionSample": {
+            "type": "string",
+            "description": "Main collection sample for Firestore"
+          },
+          "subCollectionSample": {
+            "type": "string",
+            "description": "Sub collection sample for Firestore"
+          },
+          "selectedSubCollection": {
+            "type": "string",
+            "description": "Selected sub collection for Firestore"
+          },
+          "limit": {
+            "type": "number",
+            "description": "Limit for Firestore"
+          },
+          "orderBy": {
+            "type": "string",
+            "description": "Order by field for Firestore"
+          },
+          "orderByDirection": {
+            "type": "string",
+            "enum": ["asc", "desc"],
+            "description": "Order by direction for Firestore"
+          },
+          "accountId": {
+            "type": "string",
+            "description": "Account ID for Google Analytics"
+          },
+          "propertyId": {
+            "type": "string",
+            "description": "Property ID for Google Analytics"
+          },
+          "metrics": {
+            "type": "string",
+            "description": "Metrics for Google Analytics"
+          },
+          "dimensions": {
+            "type": "string",
+            "description": "Dimensions for Google Analytics"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "Start date for Google Analytics"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "End date for Google Analytics"
+          },
+          "limitToLast": {
+            "type": "number",
+            "description": "Limit to last for RealtimeDB"
+          },
+          "limitToFirst": {
+            "type": "number",
+            "description": "Limit to first for RealtimeDB"
+          }
+        },
+        "additionalProperties": true
+      },
       "NewDataRequest": {
         "type": "object",
         "properties": {
-          "chart_id": {
-            "type": "integer"
-          },
           "dataset_id": {
             "type": "integer"
           },
@@ -3780,43 +4078,124 @@
           "query": {
             "type": "string"
           },
+          "configuration": {
+            "$ref": "#/components/schemas/DataRequestConfiguration"
+          }
+        }
+      },
+      "QuickCreateDataRequest": {
+        "type": "object",
+        "properties": {
+          "connection_id": {
+            "type": "integer",
+            "description": "The connection ID that the data request is using"
+          },
+          "method": {
+            "type": "string",
+            "enum": ["GET", "POST", "PUT", "DELETE", "PATCH"],
+            "description": "The HTTP method to use for the data request"
+          },
+          "route": {
+            "type": "string",
+            "description": "The route to use for the data request - API, RealtimeDB, Customer.io"
+          },
+          "headers": {
+            "type": "array",
+            "description": "The headers to use for the API data request",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "body": {
+            "type": "string",
+            "description": "The body to use for the API data request"
+          },
+          "useGlobalHeaders": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to use global headers for the API data request"
+          },
+          "query": {
+            "type": "string",
+            "description": "The query to use for the data request"
+          },
+          "pagination": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether to use pagination for the API data request"
+          },
+          "itemsLimit": {
+            "type": "integer",
+            "default": 0,
+            "description": "The items limit to use for the API data request. Used for pagination"
+          },
+          "offset": {
+            "type": "string",
+            "default": "offset",
+            "description": "The offset to use for the API data request. Used for pagination"
+          },
+          "paginationField": {
+            "type": "string",
+            "description": "The pagination field to use for the API data request. Used for pagination"
+          },
+          "template": {
+            "type": "string",
+            "description": "The pagination template to use for API requests"
+          },
           "conditions": {
             "type": "array",
+            "description": "Conditions to apply to the data request - used for filtering Customer.io and Firestore",
             "items": {
               "type": "object",
               "properties": {
                 "field": {
                   "type": "string"
                 },
-                "value": {
+                "operator": {
                   "type": "string"
                 },
-                "operator": {
-                  "type": "string",
-                  "enum": [
-                    "=",
-                    "!=",
-                    ">",
-                    "<",
-                    ">=",
-                    "<=",
-                    "LIKE", 
-                    "IS NULL",
-                    "IS NOT NULL"
-                  ]
+                "value": {
+                  "type": "string"
                 }
               }
             }
           },
           "configuration": {
-            "type": "object",
-            "description": "Additional configuration options",
-            "additionalProperties": true
+            "$ref": "#/components/schemas/DataRequestConfiguration"
           },
-          "variables": {
+          "transform": {
             "type": "object",
-            "description": "Request variables", 
-            "additionalProperties": true
+            "description": "Transformation to apply to the data request",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "description": "Whether to enable the transformation"
+              },
+              "type": {
+                "type": "string",
+                "description": "The type of transformation to apply (e.g., flattenNested)"
+              },
+              "configuration": {
+                "type": "object",
+                "description": "The configuration for the transformation",
+                "additionalProperties": true
+              }
+            }
+          },
+          "variableBindings": {
+            "type": "array",
+            "description": "Variable bindings for the data request. The entity_type and entity_id will be automatically set.",
+            "items": {
+              "$ref": "#/components/schemas/NewVariableBinding"
+            }
           }
         }
       },

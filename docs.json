@@ -114,6 +114,7 @@
               "api-reference/endpoint/datasets/info",
               "api-reference/endpoint/datasets/list",
               "api-reference/endpoint/datasets/get",
+              "api-reference/endpoint/datasets/quick-create",
               "api-reference/endpoint/datasets/create",
               "api-reference/endpoint/datasets/update",
               "api-reference/endpoint/datasets/delete",
