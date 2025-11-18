@@ -4,9 +4,16 @@ description: 'This guide will show you how you can create a chart in a team that
 ---
 
 <Note>
-  Creating a chart is a multi-step process since the current API was developed to be used with Chartbrew's frontend. 
-  In the future, we plan to introduce new endpoints to make the process easier.
+  Creating a chart is a multi-step process since a chart depends on a few items to work.
 </Note>
+
+## Using Quick-create routes
+
+1. Create a `Connection` to authenticate with your data source - [**/team/:team_id/connection**](/api-reference/endpoint/connections/create)
+2. Create a `Dataset` with quick-create to fetch and format the data from the data soucer - [**/team/:team_id/datasets/quick-create**](/api-reference/endpoint/datasets/quick-create)
+3. Create a `Chart` with quick-create to create the chart with all its chart dataset configs in one go - [**/project/:project_id/chart/quick-create**](/api-reference/endpoint/charts/quick-create)
+
+## Using individual routes
 
 1. Create a `Connection` to authenticate with your data source - [**/team/:team_id/connection**](/api-reference/endpoint/connections/create)
 2. Create a `Dataset` that we will use to format the data from the data source - [**/team/:team_id/dataset**](/api-reference/endpoint/datasets/create)
