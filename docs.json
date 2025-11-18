@@ -138,6 +138,7 @@
             "pages": [
               "api-reference/endpoint/charts/info",
               "api-reference/endpoint/charts/get",
+              "api-reference/endpoint/charts/quick-create",
               "api-reference/endpoint/charts/create",
               "api-reference/endpoint/charts/query",
               "api-reference/endpoint/charts/delete",
