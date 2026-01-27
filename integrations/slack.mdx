@@ -1,0 +1,158 @@
+---
+title: 'Slack Integration'
+description: 'Connect Chartbrew to Slack for self-hosted installations'
+---
+
+The Slack integration allows you to interact with Chartbrew directly from Slack. You can ask questions about your data, get insights, and share charts without leaving Slack.
+
+The Slack integration is available and ready to use when using Chartbrew Cloud at [chartbrew.com](https://chartbrew.com). Follow this guide if you want to set up the Slack integration in your self-hosted installation.
+
+## Prerequisites
+
+Before setting up the Slack integration, ensure you have:
+
+- A self-hosted Chartbrew instance running
+- Your Chartbrew API and client URLs accessible from the internet (Slack needs to reach your endpoints)
+- Admin access to your Slack workspace
+
+## Step 1: Create a Slack App
+
+1. Go to [api.slack.com/apps](https://api.slack.com/apps) and sign in with your Slack workspace
+2. Click **"Create New App"**
+3. Select **"From manifest"**
+4. Choose your workspace
+5. Copy the manifest JSON from the Chartbrew repository and paste it into the editor
+
+You can find the manifest file at: [`https://github.com/chartbrew/chartbrew/blob/master/server/apps/slack/manifest.json`](https://github.com/chartbrew/chartbrew/blob/master/server/apps/slack/manifest.json)
+
+## Step 2: Update the Manifest URLs
+
+Replace the placeholder URLs in the manifest with your own Chartbrew URLs:
+
+### Required URL Replacements
+
+In the manifest, replace these placeholders:
+
+- `https://api.your-chartbrew-url.com` → Your Chartbrew API URL (e.g., `https://api.chartbrew.example.com`)
+- `https://client.your-chartbrew-url.com` → Your Chartbrew client URL (e.g., `https://chartbrew.example.com`)
+
+### Manifest Sections to Update
+
+**1. Slash Command URL:**
+```json
+"slash_commands": [
+  {
+    "command": "/chartbrew",
+    "url": "https://api.your-chartbrew-url.com/apps/slack/commands",
+    ...
+  }
+]
+```
+
+**2. OAuth Redirect URL:**
+```json
+"oauth_config": {
+  "redirect_urls": [
+    "https://client.your-chartbrew-url.com/integrations/auth/slack/callback"
+  ],
+  ...
+}
+```
+
+**3. Event Subscriptions Request URL:**
+```json
+"event_subscriptions": {
+  "request_url": "https://api.your-chartbrew-url.com/apps/slack/events",
+  ...
+}
+```
+
+**4. Interactivity Request URL:**
+```json
+"interactivity": {
+  "request_url": "https://api.your-chartbrew-url.com/apps/slack/interactions",
+  ...
+}
+```
+
+## Step 3: Get Your Slack App Credentials
+
+After creating the app, you'll need to collect three values:
+
+1. **Client ID** (`VITE_APP_SLACK_CLIENT_ID`)
+   - Go to **"Basic Information"** → **"App Credentials"**
+   - Copy the **"Client ID"**
+
+2. **Client Secret** (`CB_SLACK_CLIENT_SECRET`)
+   - In the same section, click **"Show"** next to **"Client Secret"**
+   - Copy the **"Client Secret"**
+
+3. **Signing Secret** (`CB_SLACK_SIGNING_SECRET`)
+   - Go to **"Basic Information"** → **"App Credentials"**
+   - Copy the **"Signing Secret"**
+
+## Step 4: Configure Environment Variables
+
+Add the following environment variables to your Chartbrew `.env` file:
+
+```env
+# Slack Integration
+VITE_APP_SLACK_CLIENT_ID=your_client_id_here
+CB_SLACK_CLIENT_SECRET=your_client_secret_here
+CB_SLACK_SIGNING_SECRET=your_signing_secret_here
+```
+
+**Important Notes:**
+
+- `VITE_APP_SLACK_CLIENT_ID` is used by both the server and client apps
+- `CB_SLACK_CLIENT_SECRET` and `CB_SLACK_SIGNING_SECRET` are only used by the server app
+- After adding these variables, you'll need to **restart your Chartbrew server** and **rebuild your client** for the changes to take effect
+
+## Step 5: Install the App to Your Workspace
+
+1. In your Slack app settings, go to **"Install App"** (or **"OAuth & Permissions"**)
+2. Click **"Install to Workspace"**
+3. Review the permissions and click **"Allow"**
+4. You'll be redirected back to your Chartbrew instance
+
+## Step 6: Verify the Integration
+
+1. In Slack, open any channel or direct message
+2. Type `/chartbrew help` to see available commands
+3. You should see a response from the Chartbrew bot
+
+### Available Commands
+
+- `/chartbrew help` - Show available commands
+- `/chartbrew connect` - Connect your Chartbrew account to Slack
+- `/chartbrew status` - Check connection status
+- `/chartbrew disconnect` - Disconnect your Chartbrew account from Slack
+
+## Troubleshooting
+
+### Slack Can't Reach Your Endpoints
+
+If Slack can't reach your Chartbrew endpoints, ensure:
+
+- Your Chartbrew API and client URLs are publicly accessible
+- Your firewall allows incoming connections from Slack's IP ranges
+- Your reverse proxy (if using one) is configured correctly
+- SSL certificates are valid and trusted
+
+### Event Subscriptions Not Working
+
+If events aren't being received:
+
+1. Check that the **"Request URL"** in Event Subscriptions matches your API URL exactly
+2. Verify that `/apps/slack/events` endpoint is accessible
+3. Check your server logs for any errors
+4. In Slack app settings, check the **"Event Subscriptions"** section for any error messages
+
+### OAuth Callback Issues
+
+If the OAuth callback fails:
+
+1. Verify the redirect URL in your Slack app matches: `https://your-client-url.com/integrations/auth/slack/callback`
+2. Ensure the URL uses HTTPS (required by Slack)
+3. Check that your client app is running and accessible
+4. Review server logs for OAuth-related errors

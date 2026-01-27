@@ -37,7 +37,8 @@
             "group": "Integrations",
             "pages": [
               "integrations/google-analytics",
-              "integrations/webhooks"
+              "integrations/webhooks",
+              "integrations/slack"
             ]
           },
           {
