@@ -3,3 +3,12 @@ title: Quick Create Chart
 description: Quick create a chart with all its chart dataset configs in one API call
 openapi: POST /project/{project_id}/chart/quick-create
 ---
+
+<Note>
+Set per-series visualization bindings on each `chartDatasetConfigs[]` item.
+That includes `xAxis`, `yAxis`, `yAxisOperation`, `dateField`, `dateFormat`, `conditions`, `formula`, and `legend`.
+</Note>
+
+<Note>
+`legend` is chart-specific label text. If you omit it, Chartbrew falls back to the dataset name.
+</Note>

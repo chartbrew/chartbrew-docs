@@ -3,3 +3,12 @@ title: Quick Create
 description: Quick create a dataset with all its data requests in one go.
 openapi: POST /team/{team_id}/datasets/quick-create
 ---
+
+<Note>
+This endpoint is for creating the reusable dataset and its data requests.
+Use `name` as the canonical dataset name.
+</Note>
+
+<Note>
+Legacy binding inputs such as `dimension`, `metric`, `metricOperation`, `dateField`, `dateFormat`, `conditions`, and `legend` are still accepted for compatibility, but new chart-specific bindings should be added to `chartDatasetConfigs[]` on the chart quick-create flow instead of the dataset.
+</Note>
