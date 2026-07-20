@@ -5,18 +5,21 @@ description: 'Learn how to set up webhooks for your charts'
 
 Webhooks are used by Chartbrew to send chart alerts. Chartbrew also supports sending data to Slack through the [Incoming Webhook integration](https://api.slack.com/messaging/webhooks).
 
-## Webhook chart alerts
+## Webhook Chart Alerts
 
 Chartbrew sends `POST` requests to the webhook URL with the following payload:
 
-* `chart` - the chart name as a `string`
-* `alert` - the alert configuration
-  * `type` - the alert type is one of `milestone`, `threshold_above`, `threshold_below`, `threshold_between`, `threshold_outside`, `anomaly`
-  * `rules` - this is an `object` that shows the trigger rules for the alert
-* `alertsFound` - an `array` of `objects` containing a label and a value for each item on the chart that triggered the alert
-* `dashboardUrl` - the URL to the dashboard where the chart is located
+| Key            | Type      | Description                                                   |
+|----------------|-----------|---------------------------------------------------------------|
+| `chart`        | `string`  | The name of the chart that triggered the alert               |
+| `alert`        | `object`  | Alert configuration details                                   |
+| `alert.type`   | `string`  | One of `milestone`, `threshold_above`, `threshold_below`, `threshold_between`, `threshold_outside`, or `anomaly` |
+| `alert.rules`  | `object`  | Trigger rules for the alert                                   |
+| `alertsFound`  | `array`   | Array of objects representing the matching data points       |
+| `dashboardUrl` | `string`  | Link to the dashboard where the chart lives                  |
+| `snapshotUrl`  | `string`  | (Optional) A preview image of the chart at alert time        |
 
-Example payload:
+Example Payload:
 
 ```json
 {
@@ -29,7 +32,16 @@ Example payload:
   "snapshotUrl": "https://api.chartbrew.com/uploads/1234567890.png"
 }
 ```
+You can use this payload structure to build automation scripts, store triggered alert logs, or notify other tools in your stack.
 
-## Slack webhook
+## Test Webhooks Before You Go Live
+
+To test and debug your webhook integrations easily, try using:
+
+- [**Beeceptor**](https://beeceptor.com/) – Quickly set up a custom endpoint and inspect incoming payloads.
+- [**Typed Webhook**](https://typedwebhook.tools/) – Validate and simulate webhook requests with custom schemas.
+
+
+## Slack Webhook
 
 When sending data to Slack, Chartbrew will also attach a `blocks` property to the payload. This is an array of `objects` that contain the [Slack blocks](https://api.slack.com/block-kit) to be rendered in the message.
