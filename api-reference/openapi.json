@@ -1767,6 +1767,46 @@
         }
       }
     },
+    "/chart/{chart_id}": {
+      "get": {
+        "summary": "Get a public chart render",
+        "operationId": "getPublicChartRender",
+        "description": "Get the latest public chart render. The project must allow public access.",
+        "parameters": [
+          {
+            "name": "chart_id",
+            "in": "path",
+            "description": "ID of the chart",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Public chart response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Chart"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response"
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Chart not found"
+          }
+        },
+        "security": []
+      }
+    },
     "/project/{id}/share/policy": {
       "post": {
         "description": "Create a share policy for a project",
@@ -4690,11 +4730,26 @@
             "type": "string"
           },
           "chartData": {
-            "type": "object"
+            "type": "object",
+            "readOnly": true,
+            "deprecated": true,
+            "description": "Compatibility alias for render.configuration. Use render for new clients."
           },
           "chartDataUpdated": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "readOnly": true,
+            "description": "Compatibility timestamp for the current runtime render."
+          },
+          "preparedDataUpdatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "readOnly": true,
+            "description": "Time of the last durable prepared snapshot."
+          },
+          "render": {
+            "$ref": "#/components/schemas/ChartRender"
           },
           "project_id": {
             "type": "string"
@@ -4733,13 +4788,6 @@
           "subType": {
             "type": "string"
           },
-          "chartData": {
-            "type": "object"
-          },
-          "chartDataUpdated": {
-            "type": "string",
-            "format": "date-time"
-          },
           "project_id": {
             "type": "string"
           },
@@ -4770,14 +4818,50 @@
           "subType": {
             "type": "string"
           },
-          "chartData": {
-            "type": "object"
-          },
           "ChartDatasetConfigs": {
             "type": "array",
             "items": {
               "type": "object"
             }
+          }
+        }
+      },
+      "ChartRender": {
+        "type": "object",
+        "readOnly": true,
+        "required": [
+          "configuration",
+          "renderer",
+          "stale",
+          "version"
+        ],
+        "properties": {
+          "version": {
+            "type": "integer",
+            "enum": [1],
+            "example": 1
+          },
+          "renderer": {
+            "type": "string",
+            "enum": ["chartjs"]
+          },
+          "configuration": {
+            "type": "object",
+            "description": "Ephemeral renderer configuration generated from PreparedData."
+          },
+          "generatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "stale": {
+            "type": "boolean",
+            "description": "True when this is a last-known render while source data refreshes."
           }
         }
       },
