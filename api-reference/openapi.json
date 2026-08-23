@@ -4724,7 +4724,7 @@
           },
           "type": {
             "type": "string",
-            "enum": ["line", "bar", "pie", "doughnut", "radar", "polar", "table", "kpi", "avg", "gauge", "matrix", "markdown"]
+            "enum": ["line", "bar", "horizontalBar", "pie", "doughnut", "radar", "polar", "table", "kpi", "avg", "gauge", "matrix", "markdown"]
           },
           "subType": {
             "type": "string"
@@ -4733,7 +4733,7 @@
             "type": "object",
             "readOnly": true,
             "deprecated": true,
-            "description": "Compatibility alias for render.configuration. Use render for new clients."
+            "description": "Deprecated Chart.js or native compatibility payload. Graphical v6 clients must use render."
           },
           "chartDataUpdated": {
             "type": "string",
@@ -4783,7 +4783,8 @@
             "type": "string"
           },
           "type": {
-            "type": "string"
+            "type": "string",
+            "enum": ["line", "bar", "horizontalBar", "pie", "doughnut", "radar", "polar", "table", "kpi", "avg", "gauge", "matrix", "markdown"]
           },
           "subType": {
             "type": "string"
@@ -4813,7 +4814,8 @@
             "type": "string"
           },
           "type": {
-            "type": "string"
+            "type": "string",
+            "enum": ["line", "bar", "horizontalBar", "pie", "doughnut", "radar", "polar", "table", "kpi", "avg", "gauge", "matrix", "markdown"]
           },
           "subType": {
             "type": "string"
@@ -4843,11 +4845,12 @@
           },
           "renderer": {
             "type": "string",
-            "enum": ["chartjs"]
+            "enum": ["echarts", "native", "chartjs"],
+            "description": "Runtime renderer. chartjs is a migration fallback for older or failed graphical renders."
           },
           "configuration": {
             "type": "object",
-            "description": "Ephemeral renderer configuration generated from PreparedData."
+            "description": "Ephemeral ECharts option, native view data, or Chart.js fallback generated from PreparedData."
           },
           "generatedAt": {
             "type": "string",
@@ -5210,7 +5213,7 @@
           "type": {
             "type": "string",
             "description": "The type of chart",
-            "enum": ["line", "bar", "pie", "doughnut", "radar", "polar", "table", "kpi", "avg", "gauge", "matrix", "markdown"]
+            "enum": ["line", "bar", "horizontalBar", "pie", "doughnut", "radar", "polar", "table", "kpi", "avg", "gauge", "matrix", "markdown"]
           },
           "subType": {
             "type": "string",
@@ -5321,7 +5324,8 @@
           "horizontal": {
             "type": "boolean",
             "default": false,
-            "description": "Whether to display the chart horizontally - only works for bar charts"
+            "deprecated": true,
+            "description": "Legacy compatibility input. Use type horizontalBar for horizontal comparison charts."
           },
           "showGrowth": {
             "type": "boolean",
