@@ -30,7 +30,8 @@
               "deployment/deploy-with-apache",
               "deployment/deploy-on-heroku-and-vercel",
               "deployment/deploy-on-render",
-              "deployment/deploy-on-digitalocean"
+              "deployment/deploy-on-digitalocean",
+              "deployment/deploy-on-railway"
             ]
           },
           {
