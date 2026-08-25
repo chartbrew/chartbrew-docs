@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
+  "theme": "almond",
   "name": "Chartbrew Docs",
   "colors": {
     "primary": "#048BDE",
@@ -198,8 +198,8 @@
     }
   },
   "logo": {
-    "light": "/logo/cb_logo_dark.svg",
-    "dark": "/logo/logo_dark_mode.svg"
+    "light": "/logo/cb_logo_black.svg",
+    "dark": "/logo/cb_logo_white.svg"
   },
   "api": {
     "playground": {
