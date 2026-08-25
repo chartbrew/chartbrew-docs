@@ -1,0 +1,11 @@
+---
+title: "Query chart data"
+description: "Prepare chart rows with runtime variables or filters."
+openapi: "POST /api/v1/projects/{project_id}/charts/{chart_id}/data"
+---
+
+Use this route for chart field filters, date filters, variables, or `refresh: true`. The response
+uses the same `PreparedData` contract as the default chart route.
+
+Variables, date filters, forced refresh filters, and source refreshes require the **Refresh data
+from sources** key permission.

@@ -1,0 +1,10 @@
+---
+title: "Get dataset data"
+description: "Read the current joined and transformed result for a dataset."
+openapi: "GET /api/v1/teams/{team_id}/datasets/{dataset_id}/data"
+---
+
+Returns the dataset result after source requests, joins, and dataset transformations. The result
+keeps its array, object, scalar, or null shape.
+
+Use `If-None-Match` with the returned `ETag` to avoid downloading unchanged data.

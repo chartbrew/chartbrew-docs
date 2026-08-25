@@ -34,6 +34,16 @@ The runtime cache Redis overrides and BullMQ dashboard credentials are exception
 | CB_RUNTIME_REDIS_CA | No default | Optional CA certificate string for the runtime chart and dataset cache Redis connection. If not set, Chartbrew falls back to `CB_REDIS_CA` |
 | CB_RUNTIME_REDIS_CLUSTER_NODES | No default | Optional list of Redis cluster nodes for the runtime chart and dataset cache. Format: `host:port,host:port,host:port`. If not set, Chartbrew falls back to `CB_REDIS_CLUSTER_NODES` |
 | CB_RUNTIME_CACHE_DEBUG | `false` | Enables debug logging for the runtime chart and dataset cache, including cache hits, misses, and key selection |
+| CB_DATA_API_ENABLED | `true` | Set to `false` to disable all versioned Data API routes |
+| CB_DATA_API_RATE_LIMIT_MAX | `60` | Requests allowed per API key each minute |
+| CB_DATA_API_AUTH_RATE_LIMIT_MAX | `30` | Failed authentication attempts allowed per IP each minute |
+| CB_DATA_API_MAX_REQUEST_BYTES | `65536` | Largest accepted Data API request body, in bytes |
+| CB_DATA_API_MAX_RESPONSE_BYTES | `5242880` | Largest complete Data API response, in bytes |
+| CB_DATA_API_MAX_EXECUTION_MS | `30000` | Maximum Data API execution time, in milliseconds |
+| CB_DATA_API_MAX_FILTERS | `50` | Maximum filters in one request |
+| CB_DATA_API_MAX_VARIABLES | `100` | Maximum variables in one request |
+| CB_DATA_API_MAX_VALUE_DEPTH | `10` | Maximum nesting depth for variable and filter values |
+| CB_DATA_API_MAX_STRING_BYTES | `8192` | Maximum size of one input string, in bytes |
 | CB_API_HOST <br /> CB_API_HOST_DEV <br /> `required` | `localhost` | The address where the `server` app is running from. This variable is used internally by the `server` app. <br /> **This value is overwritten by the PORT variable (if set)**|
 | CB_API_PORT <br /> CB_API_PORT_DEV <br /> `required` | `4019` | The port where the `server` app is running from. This variable is used internally by the `server` app |
 | VITE_APP_CLIENT_HOST <br /> VITE_APP_CLIENT_HOST_DEV <br /> `required` | `http://localhost:4018` | The full address where the `client` app is running from. This variable is used in the `client` app and it's populated during the building process.<br /><br />`Note` The app needs to be restarted/rebuilt when this value is changed. |

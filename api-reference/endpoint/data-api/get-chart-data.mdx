@@ -1,0 +1,10 @@
+---
+title: "Get chart data"
+description: "Read the current renderer-neutral rows prepared for a chart."
+openapi: "GET /api/v1/projects/{project_id}/charts/{chart_id}/data"
+---
+
+Returns `PreparedData` for the chart. It contains field metadata, series, and rows. It does not
+contain ECharts options or Chart.js configuration.
+
+Use `If-None-Match` with the returned `ETag` to avoid downloading unchanged data.

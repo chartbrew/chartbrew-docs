@@ -2993,6 +2993,209 @@
           }
         ]
       }
+    },
+    "/api/v1/teams/{team_id}/datasets/{dataset_id}/data": {
+      "get": {
+        "summary": "Get dataset data",
+        "description": "Returns the current dataset result after source requests, joins, and dataset transformations. The result keeps its array, object, scalar, or null shape.",
+        "operationId": "getDatasetDataV1",
+        "tags": ["Data API"],
+        "security": [{ "dataApiBearer": [] }],
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "required": true,
+            "description": "Positive team ID bound to the API key.",
+            "schema": { "type": "integer", "minimum": 1 }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "required": true,
+            "description": "Positive dataset ID.",
+            "schema": { "type": "integer", "minimum": 1 }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "required": false,
+            "description": "ETag from an earlier default GET.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/DatasetDataSuccess" },
+          "304": { "$ref": "#/components/responses/DataNotModified" },
+          "400": { "$ref": "#/components/responses/DataApiInvalidRequest" },
+          "401": { "$ref": "#/components/responses/DataApiUnauthorized" },
+          "403": { "$ref": "#/components/responses/DataApiForbidden" },
+          "404": { "$ref": "#/components/responses/DataApiNotFound" },
+          "406": { "$ref": "#/components/responses/DataApiNotAcceptable" },
+          "413": { "$ref": "#/components/responses/DataApiTooLarge" },
+          "429": { "$ref": "#/components/responses/DataApiRateLimited" },
+          "500": { "$ref": "#/components/responses/DataApiInternalError" },
+          "503": { "$ref": "#/components/responses/DataApiUnavailable" },
+          "504": { "$ref": "#/components/responses/DataApiTimeout" }
+        }
+      },
+      "post": {
+        "summary": "Query dataset data",
+        "description": "Returns dataset data with runtime variables, field filters, an IANA timezone, or an explicit source refresh. Variables and source refreshes require data refresh permission.",
+        "operationId": "queryDatasetDataV1",
+        "tags": ["Data API"],
+        "security": [{ "dataApiBearer": [] }],
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "required": true,
+            "description": "Positive team ID bound to the API key.",
+            "schema": { "type": "integer", "minimum": 1 }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "required": true,
+            "description": "Positive dataset ID.",
+            "schema": { "type": "integer", "minimum": 1 }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/DatasetDataRequest" },
+              "example": {
+                "variables": { "region": "APAC" },
+                "filters": [{
+                  "type": "field",
+                  "field": "root[].amount",
+                  "operator": "greaterOrEqual",
+                  "value": 100
+                }],
+                "refresh": false,
+                "timezone": "Asia/Bangkok"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/DatasetDataSuccess" },
+          "400": { "$ref": "#/components/responses/DataApiInvalidRequest" },
+          "401": { "$ref": "#/components/responses/DataApiUnauthorized" },
+          "403": { "$ref": "#/components/responses/DataApiForbidden" },
+          "404": { "$ref": "#/components/responses/DataApiNotFound" },
+          "406": { "$ref": "#/components/responses/DataApiNotAcceptable" },
+          "413": { "$ref": "#/components/responses/DataApiTooLarge" },
+          "415": { "$ref": "#/components/responses/DataApiUnsupportedMediaType" },
+          "429": { "$ref": "#/components/responses/DataApiRateLimited" },
+          "500": { "$ref": "#/components/responses/DataApiInternalError" },
+          "503": { "$ref": "#/components/responses/DataApiUnavailable" },
+          "504": { "$ref": "#/components/responses/DataApiTimeout" }
+        }
+      }
+    },
+    "/api/v1/projects/{project_id}/charts/{chart_id}/data": {
+      "get": {
+        "summary": "Get chart data",
+        "description": "Returns renderer-neutral PreparedData for a chart. A stale saved result can be returned while Chartbrew refreshes source data.",
+        "operationId": "getChartDataV1",
+        "tags": ["Data API"],
+        "security": [{ "dataApiBearer": [] }],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "required": true,
+            "description": "Positive project ID in the API key's project access.",
+            "schema": { "type": "integer", "minimum": 1 }
+          },
+          {
+            "name": "chart_id",
+            "in": "path",
+            "required": true,
+            "description": "Positive chart ID in the project.",
+            "schema": { "type": "integer", "minimum": 1 }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "required": false,
+            "description": "ETag from an earlier default GET.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/PreparedDataSuccess" },
+          "304": { "$ref": "#/components/responses/DataNotModified" },
+          "400": { "$ref": "#/components/responses/DataApiInvalidRequest" },
+          "401": { "$ref": "#/components/responses/DataApiUnauthorized" },
+          "403": { "$ref": "#/components/responses/DataApiForbidden" },
+          "404": { "$ref": "#/components/responses/DataApiNotFound" },
+          "406": { "$ref": "#/components/responses/DataApiNotAcceptable" },
+          "413": { "$ref": "#/components/responses/DataApiTooLarge" },
+          "429": { "$ref": "#/components/responses/DataApiRateLimited" },
+          "500": { "$ref": "#/components/responses/DataApiInternalError" },
+          "503": { "$ref": "#/components/responses/DataApiUnavailable" },
+          "504": { "$ref": "#/components/responses/DataApiTimeout" }
+        }
+      },
+      "post": {
+        "summary": "Query chart data",
+        "description": "Prepares chart rows with runtime variables, field or date filters, or a source refresh. The chart's project timezone is always used.",
+        "operationId": "queryChartDataV1",
+        "tags": ["Data API"],
+        "security": [{ "dataApiBearer": [] }],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "required": true,
+            "description": "Positive project ID in the API key's project access.",
+            "schema": { "type": "integer", "minimum": 1 }
+          },
+          {
+            "name": "chart_id",
+            "in": "path",
+            "required": true,
+            "description": "Positive chart ID in the project.",
+            "schema": { "type": "integer", "minimum": 1 }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ChartDataRequest" },
+              "example": {
+                "variables": { "region": "APAC" },
+                "filters": [{
+                  "type": "date",
+                  "startDate": "2026-08-01",
+                  "endDate": "2026-08-31",
+                  "scope": "chart"
+                }],
+                "refresh": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/PreparedDataSuccess" },
+          "400": { "$ref": "#/components/responses/DataApiInvalidRequest" },
+          "401": { "$ref": "#/components/responses/DataApiUnauthorized" },
+          "403": { "$ref": "#/components/responses/DataApiForbidden" },
+          "404": { "$ref": "#/components/responses/DataApiNotFound" },
+          "406": { "$ref": "#/components/responses/DataApiNotAcceptable" },
+          "413": { "$ref": "#/components/responses/DataApiTooLarge" },
+          "415": { "$ref": "#/components/responses/DataApiUnsupportedMediaType" },
+          "429": { "$ref": "#/components/responses/DataApiRateLimited" },
+          "500": { "$ref": "#/components/responses/DataApiInternalError" },
+          "503": { "$ref": "#/components/responses/DataApiUnavailable" },
+          "504": { "$ref": "#/components/responses/DataApiTimeout" }
+        }
+      }
     }
   },
   "components": {
@@ -5553,6 +5756,248 @@
           }
         }
       },
+      "DataApiVariables": {
+        "type": "object",
+        "description": "Runtime variable values. The default limit is 100 keys, 10 nested levels, and 8192 bytes per string. Variable names __proto__, constructor, and prototype are not accepted.",
+        "maxProperties": 100,
+        "additionalProperties": {}
+      },
+      "DataApiFieldFilter": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["field", "operator"],
+        "properties": {
+          "type": { "type": "string", "enum": ["field"], "default": "field" },
+          "field": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Dataset field path, such as root[].status. Dataset filters must identify one array collection."
+          },
+          "operator": {
+            "type": "string",
+            "enum": [
+              "is", "isNot", "contains", "notContains", "greaterThan", "greaterOrEqual",
+              "lessThan", "lessOrEqual", "isNull", "isNotNull"
+            ]
+          },
+          "value": {
+            "description": "JSON comparison value. It is optional for isNull and isNotNull.",
+            "nullable": true
+          },
+          "scope": { "type": "string", "enum": ["chart", "cdc"] },
+          "cdcId": {
+            "description": "Chart dataset configuration ID. Use only with chart cdc scope.",
+            "oneOf": [
+              { "type": "integer", "minimum": 1 },
+              { "type": "string", "pattern": "^[1-9]\\d*$" }
+            ]
+          },
+          "forceSourceRefresh": { "type": "boolean", "default": false }
+        }
+      },
+      "DataApiDateFilter": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "startDate", "endDate"],
+        "properties": {
+          "type": { "type": "string", "enum": ["date"] },
+          "startDate": {
+            "type": "string",
+            "description": "ISO 8601 date or date-time."
+          },
+          "endDate": {
+            "type": "string",
+            "description": "ISO 8601 date or date-time."
+          },
+          "scope": { "type": "string", "enum": ["chart"], "default": "chart" }
+        }
+      },
+      "DataApiChartFilter": {
+        "oneOf": [
+          { "$ref": "#/components/schemas/DataApiFieldFilter" },
+          { "$ref": "#/components/schemas/DataApiDateFilter" }
+        ]
+      },
+      "ChartDataRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "variables": { "$ref": "#/components/schemas/DataApiVariables" },
+          "filters": {
+            "type": "array",
+            "maxItems": 50,
+            "items": { "$ref": "#/components/schemas/DataApiChartFilter" },
+            "default": []
+          },
+          "refresh": { "type": "boolean", "default": false }
+        }
+      },
+      "DatasetDataRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "variables": { "$ref": "#/components/schemas/DataApiVariables" },
+          "filters": {
+            "type": "array",
+            "maxItems": 50,
+            "description": "Chart-wide field filters. Date and chart dataset configuration scopes are not accepted.",
+            "items": { "$ref": "#/components/schemas/DataApiFieldFilter" },
+            "default": []
+          },
+          "refresh": { "type": "boolean", "default": false },
+          "timezone": {
+            "type": "string",
+            "description": "IANA timezone used for dataset field comparisons.",
+            "default": "UTC",
+            "example": "Asia/Bangkok"
+          }
+        }
+      },
+      "DataApiResource": {
+        "type": "object",
+        "required": ["kind", "id"],
+        "properties": {
+          "kind": { "type": "string", "enum": ["chart", "dataset"] },
+          "id": { "type": "integer" },
+          "name": { "type": "string", "nullable": true }
+        }
+      },
+      "PreparedField": {
+        "type": "object",
+        "required": ["key", "type", "role"],
+        "properties": {
+          "key": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["nominal", "quantitative", "temporal", "boolean", "array", "record", "unknown"]
+          },
+          "role": { "type": "string", "enum": ["dimension", "measure"] },
+          "sourceField": { "type": "string", "nullable": true }
+        }
+      },
+      "PreparedSeries": {
+        "type": "object",
+        "required": ["id", "label"],
+        "properties": {
+          "id": { "type": "string" },
+          "label": { "type": "string" }
+        },
+        "additionalProperties": true
+      },
+      "PreparedWarning": {
+        "description": "A stable preparation warning.",
+        "oneOf": [
+          { "type": "string" },
+          { "type": "object", "additionalProperties": true }
+        ]
+      },
+      "PreparedResult": {
+        "type": "object",
+        "required": ["id", "mark", "fields", "series", "availableSeries", "rows", "warnings"],
+        "properties": {
+          "id": { "type": "string" },
+          "mark": {
+            "type": "string",
+            "description": "Renderer-neutral chart mark, such as line, bar, table, or kpi."
+          },
+          "name": { "type": "string", "nullable": true },
+          "fields": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PreparedField" }
+          },
+          "series": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PreparedSeries" }
+          },
+          "availableSeries": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PreparedSeries" }
+          },
+          "rows": {
+            "type": "array",
+            "items": { "type": "object", "additionalProperties": true }
+          },
+          "stats": { "type": "object", "additionalProperties": true },
+          "warnings": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PreparedWarning" }
+          }
+        }
+      },
+      "PreparedData": {
+        "type": "object",
+        "required": [
+          "version", "frameVersion", "identityVersion", "generatedAt", "resource", "results", "stats", "warnings"
+        ],
+        "properties": {
+          "version": { "type": "integer", "enum": [1] },
+          "frameVersion": { "type": "integer", "enum": [1] },
+          "identityVersion": { "type": "integer", "enum": [1] },
+          "generatedAt": { "type": "string", "format": "date-time" },
+          "resource": { "$ref": "#/components/schemas/DataApiResource" },
+          "results": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PreparedResult" }
+          },
+          "stats": { "type": "object", "additionalProperties": true },
+          "warnings": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PreparedWarning" }
+          }
+        }
+      },
+      "DatasetDataField": {
+        "type": "object",
+        "required": ["key", "type"],
+        "properties": {
+          "key": { "type": "string", "example": "root[].amount" },
+          "type": {
+            "type": "string",
+            "enum": ["number", "date", "string", "boolean", "array", "object", "unknown"]
+          }
+        }
+      },
+      "DatasetData": {
+        "type": "object",
+        "required": ["version", "generatedAt", "resource", "fields", "data"],
+        "properties": {
+          "version": { "type": "integer", "enum": [1] },
+          "generatedAt": { "type": "string", "format": "date-time" },
+          "resource": { "$ref": "#/components/schemas/DataApiResource" },
+          "fields": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/DatasetDataField" }
+          },
+          "data": {
+            "description": "Joined and transformed dataset value. It can be an array, object, scalar, or null.",
+            "nullable": true
+          }
+        }
+      },
+      "DataApiErrorDetail": {
+        "type": "object",
+        "required": ["code", "message", "requestId"],
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "INVALID_REQUEST", "INVALID_VARIABLE", "INVALID_FILTER", "API_KEY_REQUIRED",
+              "API_KEY_INVALID", "API_KEY_SCOPE_REQUIRED", "RESOURCE_NOT_FOUND", "NOT_ACCEPTABLE",
+              "REQUEST_TOO_LARGE", "RESPONSE_TOO_LARGE", "UNSUPPORTED_MEDIA_TYPE", "RATE_LIMITED",
+              "INTERNAL_ERROR", "DATA_UNAVAILABLE", "EXECUTION_TIMEOUT"
+            ]
+          },
+          "message": { "type": "string" },
+          "requestId": { "type": "string", "format": "uuid" }
+        }
+      },
+      "DataApiError": {
+        "type": "object",
+        "required": ["error"],
+        "properties": {
+          "error": { "$ref": "#/components/schemas/DataApiErrorDetail" }
+        }
+      },
       "Error": {
         "type": "object",
         "properties": {
@@ -5565,10 +6010,252 @@
         }
       }
     },
+    "headers": {
+      "DataEtag": {
+        "description": "Content identity returned for GET responses. Generation time is not part of this value.",
+        "schema": { "type": "string", "example": "\"pd-v1-0123456789abcdef\"" }
+      },
+      "DataLastModified": {
+        "description": "Generation time in HTTP date format.",
+        "schema": { "type": "string", "example": "Tue, 25 Aug 2026 08:00:00 GMT" }
+      },
+      "DataStale": {
+        "description": "True when Chartbrew returns the last known result while source data is stale.",
+        "schema": { "type": "boolean", "example": false }
+      },
+      "RetryAfter": {
+        "description": "Seconds to wait before another request.",
+        "schema": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "responses": {
+      "PreparedDataSuccess": {
+        "description": "Prepared chart data. A GET can return a stale saved result while a refresh runs.",
+        "headers": {
+          "ETag": { "$ref": "#/components/headers/DataEtag" },
+          "Last-Modified": { "$ref": "#/components/headers/DataLastModified" },
+          "X-Chartbrew-Data-Stale": { "$ref": "#/components/headers/DataStale" }
+        },
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/PreparedData" },
+            "examples": {
+              "default": {
+                "summary": "Default chart result",
+                "value": {
+                  "version": 1,
+                  "frameVersion": 1,
+                  "identityVersion": 1,
+                  "generatedAt": "2026-08-25T08:00:00.000Z",
+                  "resource": { "kind": "chart", "id": 81 },
+                  "results": [{
+                    "id": "revenue",
+                    "mark": "line",
+                    "name": "Revenue",
+                    "fields": [
+                      { "key": "time", "type": "temporal", "role": "dimension", "sourceField": "root[].createdAt" },
+                      { "key": "value", "type": "quantitative", "role": "measure", "sourceField": "root[].revenue" }
+                    ],
+                    "series": [{ "id": "series-ec3bc4d7d9f66b02", "label": "Pro" }],
+                    "availableSeries": [{ "id": "series-ec3bc4d7d9f66b02", "label": "Pro" }],
+                    "rows": [{
+                      "time": "2026-08-01T00:00:00.000Z",
+                      "value": 21400,
+                      "seriesId": "series-ec3bc4d7d9f66b02"
+                    }],
+                    "stats": {},
+                    "warnings": []
+                  }],
+                  "stats": {},
+                  "warnings": []
+                }
+              },
+              "runtime": {
+                "summary": "Runtime filtered chart result",
+                "value": {
+                  "version": 1,
+                  "frameVersion": 1,
+                  "identityVersion": 1,
+                  "generatedAt": "2026-08-25T08:05:00.000Z",
+                  "resource": { "kind": "chart", "id": 81 },
+                  "results": [{
+                    "id": "revenue",
+                    "mark": "line",
+                    "name": "Revenue",
+                    "fields": [
+                      { "key": "time", "type": "temporal", "role": "dimension", "sourceField": "root[].createdAt" },
+                      { "key": "value", "type": "quantitative", "role": "measure", "sourceField": "root[].revenue" }
+                    ],
+                    "series": [],
+                    "availableSeries": [],
+                    "rows": [{ "time": "2026-08-20T00:00:00.000Z", "value": 120 }],
+                    "stats": {},
+                    "warnings": []
+                  }],
+                  "stats": {},
+                  "warnings": []
+                }
+              }
+            }
+          }
+        }
+      },
+      "DatasetDataSuccess": {
+        "description": "Joined and transformed dataset data.",
+        "headers": {
+          "ETag": { "$ref": "#/components/headers/DataEtag" },
+          "Last-Modified": { "$ref": "#/components/headers/DataLastModified" },
+          "X-Chartbrew-Data-Stale": { "$ref": "#/components/headers/DataStale" }
+        },
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/DatasetData" },
+            "example": {
+              "version": 1,
+              "generatedAt": "2026-08-25T08:00:00.000Z",
+              "resource": { "kind": "dataset", "id": 18, "name": "Orders" },
+              "fields": [
+                { "key": "root[].amount", "type": "number" },
+                { "key": "root[].customer.name", "type": "string" }
+              ],
+              "data": [{ "amount": 120, "customer": { "name": "Ada" } }]
+            }
+          }
+        }
+      },
+      "DataNotModified": {
+        "description": "The authorized default result has not changed. The response has no body.",
+        "headers": {
+          "ETag": { "$ref": "#/components/headers/DataEtag" },
+          "Last-Modified": { "$ref": "#/components/headers/DataLastModified" },
+          "X-Chartbrew-Data-Stale": { "$ref": "#/components/headers/DataStale" }
+        }
+      },
+      "DataApiInvalidRequest": {
+        "description": "The ID, body, variable, filter, or JSON shape is not valid.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/DataApiError" },
+            "example": {
+              "error": {
+                "code": "INVALID_FILTER",
+                "message": "One or more filters are not valid.",
+                "requestId": "7a39da10-819c-4db4-9dcf-f27d48e3a7c0"
+              }
+            }
+          }
+        }
+      },
+      "DataApiUnauthorized": {
+        "description": "The Data API bearer key is missing or invalid.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/DataApiError" },
+            "example": {
+              "error": {
+                "code": "API_KEY_INVALID",
+                "message": "The API key is not valid.",
+                "requestId": "7a39da10-819c-4db4-9dcf-f27d48e3a7c0"
+              }
+            }
+          }
+        }
+      },
+      "DataApiForbidden": {
+        "description": "The key does not have read or refresh permission.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/DataApiError" },
+            "example": {
+              "error": {
+                "code": "API_KEY_SCOPE_REQUIRED",
+                "message": "The API key does not have the required permission.",
+                "requestId": "7a39da10-819c-4db4-9dcf-f27d48e3a7c0"
+              }
+            }
+          }
+        }
+      },
+      "DataApiNotFound": {
+        "description": "The resource is missing, outside key access, or under another parent.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/DataApiError" },
+            "example": {
+              "error": {
+                "code": "RESOURCE_NOT_FOUND",
+                "message": "The requested resource was not found.",
+                "requestId": "7a39da10-819c-4db4-9dcf-f27d48e3a7c0"
+              }
+            }
+          }
+        }
+      },
+      "DataApiNotAcceptable": {
+        "description": "The client does not accept JSON.",
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/DataApiError" } }
+        }
+      },
+      "DataApiTooLarge": {
+        "description": "The request exceeds 65536 bytes by default, or the complete response exceeds 5242880 bytes by default.",
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/DataApiError" } }
+        }
+      },
+      "DataApiUnsupportedMediaType": {
+        "description": "The POST body is not application/json.",
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/DataApiError" } }
+        }
+      },
+      "DataApiRateLimited": {
+        "description": "The default limit is 60 requests per API key per minute or 30 failed authentication attempts per IP per minute.",
+        "headers": {
+          "Retry-After": { "$ref": "#/components/headers/RetryAfter" }
+        },
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/DataApiError" },
+            "example": {
+              "error": {
+                "code": "RATE_LIMITED",
+                "message": "Too many requests were sent. Try again later.",
+                "requestId": "7a39da10-819c-4db4-9dcf-f27d48e3a7c0"
+              }
+            }
+          }
+        }
+      },
+      "DataApiInternalError": {
+        "description": "The server could not complete the request.",
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/DataApiError" } }
+        }
+      },
+      "DataApiUnavailable": {
+        "description": "No saved result is usable and the source cannot supply data.",
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/DataApiError" } }
+        }
+      },
+      "DataApiTimeout": {
+        "description": "The request exceeded the default 30000 millisecond execution limit.",
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/DataApiError" } }
+        }
+      }
+    },
     "securitySchemes": {
       "bearerAuth": {
         "type": "http",
         "scheme": "bearer"
+      },
+      "dataApiBearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "Chartbrew API key",
+        "description": "A database-bound Data API key created in Team settings. Session and share tokens are not accepted."
       }
     }
   }

@@ -69,7 +69,17 @@
           {
             "group": "Guides",
             "pages": [
-              "api-reference/guides/create-chart"
+              "api-reference/guides/create-chart",
+              "api-reference/guides/data-api"
+            ]
+          },
+          {
+            "group": "Data API",
+            "pages": [
+              "api-reference/endpoint/data-api/get-dataset-data",
+              "api-reference/endpoint/data-api/query-dataset-data",
+              "api-reference/endpoint/data-api/get-chart-data",
+              "api-reference/endpoint/data-api/query-chart-data"
             ]
           },
           {
