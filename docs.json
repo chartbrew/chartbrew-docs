@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
+  "theme": "almond",
   "name": "Chartbrew Docs",
   "colors": {
     "primary": "#048BDE",
@@ -69,7 +69,17 @@
           {
             "group": "Guides",
             "pages": [
-              "api-reference/guides/create-chart"
+              "api-reference/guides/create-chart",
+              "api-reference/guides/data-api"
+            ]
+          },
+          {
+            "group": "Data API",
+            "pages": [
+              "api-reference/endpoint/data-api/get-dataset-data",
+              "api-reference/endpoint/data-api/query-dataset-data",
+              "api-reference/endpoint/data-api/get-chart-data",
+              "api-reference/endpoint/data-api/query-chart-data"
             ]
           },
           {
@@ -188,8 +198,8 @@
     }
   },
   "logo": {
-    "light": "/logo/cb_logo_dark.svg",
-    "dark": "/logo/logo_dark_mode.svg"
+    "light": "/logo/cb_logo_black.svg",
+    "dark": "/logo/cb_logo_white.svg"
   },
   "api": {
     "playground": {

@@ -1,0 +1,10 @@
+---
+title: "Query dataset data"
+description: "Read dataset data with variables, field filters, or a source refresh."
+openapi: "POST /api/v1/teams/{team_id}/datasets/{dataset_id}/data"
+---
+
+Use this route for runtime variables, field filters, a timezone, or `refresh: true`. Filters run
+after joins and dataset transformations.
+
+Variables and source refreshes require the **Refresh data from sources** key permission.

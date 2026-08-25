@@ -1,0 +1,120 @@
+---
+title: "Use the Data API"
+description: "Read dataset results and prepared chart rows with project-scoped API keys."
+---
+
+The Data API returns reusable JSON data. Dataset routes return joined and transformed source data.
+Chart routes return the rows and field metadata prepared for the chart, without renderer settings.
+
+## Create a key
+
+A team owner or team admin can create a key in **Team settings → API keys**.
+
+1. Enter a name.
+2. Select all projects in the team or specific projects.
+3. Keep **Read chart and dataset data** selected.
+4. Select **Refresh data from sources** if the client sends variables, date filters, or refreshes.
+
+Copy the key when Chartbrew shows it. The key is not shown again.
+
+The key is bound to the team where you create it. It cannot read a project from another team.
+
+## Read default data
+
+```bash
+curl "https://api.chartbrew.com/api/v1/projects/42/charts/81/data" \
+  --header "Authorization: Bearer $CHARTBREW_API_KEY" \
+  --header "Accept: application/json"
+```
+
+For a dataset, use `/api/v1/teams/{team_id}/datasets/{dataset_id}/data`.
+
+## Send runtime values
+
+Use `POST` when you need variables, filters, or a source refresh.
+
+```bash
+curl --request POST "https://api.chartbrew.com/api/v1/projects/42/charts/81/data" \
+  --header "Authorization: Bearer $CHARTBREW_API_KEY" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "variables": { "region": "APAC" },
+    "filters": [{
+      "type": "field",
+      "field": "root[].status",
+      "operator": "is",
+      "value": "paid"
+    }]
+  }'
+```
+
+Dataset requests can also set an IANA timezone, such as `"Asia/Bangkok"`. Chart requests always
+use the dashboard timezone.
+
+## Cache default reads
+
+Save the `ETag` from a successful `GET`, then send it with the next request.
+
+```bash
+curl "https://api.chartbrew.com/api/v1/projects/42/charts/81/data" \
+  --header "Authorization: Bearer $CHARTBREW_API_KEY" \
+  --header 'If-None-Match: "pd-v1-..."'
+```
+
+An unchanged result returns `304` with no body. `X-Chartbrew-Data-Stale: true` means Chartbrew
+returned the last known chart data while it refreshes the source.
+
+## Use chart rows
+
+Each chart result has `fields`, `series`, and `rows`. Field keys describe the row properties. The
+same response can drive any chart library.
+
+<CodeGroup>
+```js ECharts
+const result = preparedData.results[0];
+const categoryKey = result.fields.find((field) => field.role === "dimension").key;
+const valueKey = result.fields.find((field) => field.role === "measure").key;
+
+chart.setOption({
+  xAxis: { type: "category" },
+  yAxis: { type: "value" },
+  dataset: {
+    source: result.rows.map((row) => [row[categoryKey], row[valueKey]]),
+  },
+  series: [{ type: result.mark === "line" ? "line" : "bar" }],
+});
+```
+
+```js Chart.js
+const result = preparedData.results[0];
+const categoryKey = result.fields.find((field) => field.role === "dimension").key;
+const valueKey = result.fields.find((field) => field.role === "measure").key;
+
+new Chart(canvas, {
+  type: result.mark === "line" ? "line" : "bar",
+  data: {
+    labels: result.rows.map((row) => row[categoryKey]),
+    datasets: [{
+      label: result.name || "Value",
+      data: result.rows.map((row) => row[valueKey]),
+    }],
+  },
+});
+```
+</CodeGroup>
+
+## Handle errors
+
+All errors include `error.code`, a safe message, and `error.requestId`.
+
+| Status | Action |
+| --- | --- |
+| `401` | Check that the bearer key is current and was created for Data API use. |
+| `403` | Add the required read or refresh permission. |
+| `404` | Check the parent ID, the key's team, and its project access. |
+| `413` | Reduce the request or returned dataset size. |
+| `429` | Wait for `Retry-After`, then retry. |
+| `503` | Retry later; no usable source or saved result is available. |
+| `504` | Retry with a smaller request or after the source recovers. |
+
+Do not retry `401`, `403`, or `404` until the key or request changes.
