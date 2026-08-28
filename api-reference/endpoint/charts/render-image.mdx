@@ -1,0 +1,11 @@
+---
+title: "Render chart image"
+description: "Render the latest prepared chart snapshot as a PNG."
+openapi: "POST /project/{project_id}/chart/{chart_id}/image"
+---
+
+Returns a PNG from the latest successful default chart snapshot. This endpoint requires an
+authenticated Chartbrew user session and export access to the project.
+
+Data API keys, legacy API keys, public share tokens, and client-supplied chart data are not
+accepted.

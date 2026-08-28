@@ -3096,6 +3096,115 @@
         }
       }
     },
+    "/project/{project_id}/chart/{chart_id}/image": {
+      "post": {
+        "summary": "Render chart image",
+        "description": "Renders the latest successful default chart snapshot as a PNG. This endpoint accepts authenticated user sessions only. The user must have project access and permission to export the chart.",
+        "operationId": "renderChartImage",
+        "tags": ["Charts"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "required": true,
+            "description": "Positive project ID that the user can access.",
+            "schema": { "type": "integer", "minimum": 1 }
+          },
+          {
+            "name": "chart_id",
+            "in": "path",
+            "required": true,
+            "description": "Positive chart ID in the project.",
+            "schema": { "type": "integer", "minimum": 1 }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ChartImageRequest" },
+              "example": {
+                "version": 1,
+                "layout": "shareCard",
+                "size": { "preset": "landscape" },
+                "theme": "light",
+                "locale": "en-US",
+                "background": { "mode": "default" },
+                "content": {
+                  "title": { "show": true, "text": "Visits in the last 30 days" },
+                  "subtitle": { "show": false, "text": "" },
+                  "logo": true,
+                  "companyName": true,
+                  "dashboardName": true,
+                  "branding": "chartbrew"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "PNG image.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Private response that must not be stored.",
+                "schema": { "type": "string", "example": "private, no-store" }
+              },
+              "X-Request-Id": {
+                "description": "Request identifier for support.",
+                "schema": { "type": "string", "format": "uuid" }
+              }
+            },
+            "content": {
+              "image/png": {
+                "schema": { "type": "string", "format": "binary" }
+              }
+            }
+          },
+          "400": {
+            "description": "The image options are invalid.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ChartImageError" } } }
+          },
+          "401": {
+            "description": "The user session is missing or invalid. API keys and share tokens are not accepted.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ChartImageError" } } }
+          },
+          "403": {
+            "description": "The user cannot access or export the chart.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ChartImageError" } } }
+          },
+          "404": {
+            "description": "The project or chart relationship does not exist.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ChartImageError" } } }
+          },
+          "409": {
+            "description": "The chart type does not support image rendering.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ChartImageError" } } }
+          },
+          "413": {
+            "description": "The request or rendered image exceeds a fixed limit.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ChartImageError" } } }
+          },
+          "429": {
+            "description": "The user sent more than 30 image requests in one minute.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ChartImageError" } } }
+          },
+          "500": {
+            "description": "The image could not be created.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ChartImageError" } } }
+          },
+          "503": {
+            "description": "The chart data is unavailable or the render queue is full.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ChartImageError" } } }
+          },
+          "504": {
+            "description": "Image rendering exceeded the fixed deadline.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ChartImageError" } } }
+          }
+        }
+      }
+    },
     "/api/v1/projects/{project_id}/charts/{chart_id}/data": {
       "get": {
         "summary": "Get chart data",
@@ -5755,6 +5864,84 @@
             "description": "Token expiration date and time for the chart"
           }
         }
+      },
+      "ChartImageRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["version"],
+        "properties": {
+          "version": { "type": "integer", "enum": [1] },
+          "layout": { "type": "string", "enum": ["shareCard", "chartOnly"], "default": "shareCard" },
+          "size": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "preset": { "type": "string", "enum": ["landscape", "mobile", "original"], "default": "landscape" },
+              "sourceWidth": { "type": "number", "minimum": 0, "exclusiveMinimum": true, "maximum": 10000, "description": "Required with the original preset." },
+              "sourceHeight": { "type": "number", "minimum": 0, "exclusiveMinimum": true, "maximum": 10000, "description": "Required with the original preset." }
+            }
+          },
+          "theme": { "type": "string", "enum": ["light", "dark"], "default": "light" },
+          "locale": { "type": "string", "maxLength": 64, "default": "en-US" },
+          "background": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "mode": { "type": "string", "enum": ["default", "custom", "gradient"], "default": "default" },
+              "color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "description": "Required with custom mode." },
+              "from": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "description": "Required with gradient mode." },
+              "to": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "description": "Required with gradient mode." }
+            }
+          },
+          "content": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "title": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "show": { "type": "boolean", "default": true },
+                  "text": { "type": "string", "maxLength": 160 }
+                }
+              },
+              "subtitle": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "show": { "type": "boolean", "default": false },
+                  "text": { "type": "string", "maxLength": 240 }
+                }
+              },
+              "logo": { "type": "boolean", "default": true },
+              "companyName": { "type": "boolean", "default": true },
+              "dashboardName": { "type": "boolean", "default": true },
+              "branding": { "type": "string", "enum": ["chartbrew", "whiteLabel"], "default": "chartbrew" }
+            }
+          }
+        }
+      },
+      "ChartImageErrorDetail": {
+        "type": "object",
+        "required": ["code", "message", "requestId"],
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "INVALID_IMAGE_OPTIONS", "AUTHENTICATION_REQUIRED", "IMAGE_EXPORT_FORBIDDEN",
+              "RESOURCE_NOT_FOUND", "IMAGE_PRESET_UNSUPPORTED", "IMAGE_TOO_LARGE",
+              "IMAGE_RATE_LIMITED", "IMAGE_DATA_UNAVAILABLE", "IMAGE_RENDER_BUSY",
+              "IMAGE_RENDER_TIMEOUT", "IMAGE_RENDER_FAILED"
+            ]
+          },
+          "message": { "type": "string" },
+          "requestId": { "type": "string", "format": "uuid" }
+        }
+      },
+      "ChartImageError": {
+        "type": "object",
+        "required": ["error"],
+        "properties": { "error": { "$ref": "#/components/schemas/ChartImageErrorDetail" } }
       },
       "DataApiVariables": {
         "type": "object",

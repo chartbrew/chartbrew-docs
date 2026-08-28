@@ -42,6 +42,12 @@
             ]
           },
           {
+            "group": "Charts",
+            "pages": [
+              "charts/share-images"
+            ]
+          },
+          {
             "group": "Architecture",
             "pages": [
               "architecture/backend",
@@ -152,6 +158,7 @@
               "api-reference/endpoint/charts/quick-create",
               "api-reference/endpoint/charts/create",
               "api-reference/endpoint/charts/query",
+              "api-reference/endpoint/charts/render-image",
               "api-reference/endpoint/charts/delete",
               "api-reference/endpoint/charts/share-chart",
               "api-reference/endpoint/charts/create-share-policy",
