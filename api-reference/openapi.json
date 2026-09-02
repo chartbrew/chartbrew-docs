@@ -5041,18 +5041,6 @@
           "subType": {
             "type": "string"
           },
-          "chartData": {
-            "type": "object",
-            "readOnly": true,
-            "deprecated": true,
-            "description": "Deprecated Chart.js or native compatibility payload. Graphical v6 clients must use render."
-          },
-          "chartDataUpdated": {
-            "type": "string",
-            "format": "date-time",
-            "readOnly": true,
-            "description": "Compatibility timestamp for the current runtime render."
-          },
           "preparedDataUpdatedAt": {
             "type": "string",
             "format": "date-time",
@@ -5157,12 +5145,12 @@
           },
           "renderer": {
             "type": "string",
-            "enum": ["echarts", "native", "chartjs"],
-            "description": "Runtime renderer. chartjs is a migration fallback for older or failed graphical renders."
+            "enum": ["echarts", "native"],
+            "description": "Runtime renderer for the generated chart configuration."
           },
           "configuration": {
             "type": "object",
-            "description": "Ephemeral ECharts option, native view data, or Chart.js fallback generated from PreparedData."
+            "description": "Ephemeral ECharts option or native view data generated from PreparedData."
           },
           "generatedAt": {
             "type": "string",
@@ -5177,6 +5165,14 @@
           "stale": {
             "type": "boolean",
             "description": "True when this is a last-known render while source data refreshes."
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Renderer-neutral series, metric, category, warning, and time-range metadata."
+          },
+          "tabularData": {
+            "type": "object",
+            "description": "Renderer-neutral chart-as-shown data used for exports."
           }
         }
       },
